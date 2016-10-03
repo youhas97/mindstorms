@@ -1,0 +1,15 @@
+-What happens?
+It rotates 360 degrees at maximum speed.
+
+-What do you need to to do fix this problem?
+There is no problem.
+
+What does the numbers 100, 360 stand for?
+100 is the speed, 360 the rotation of the motor.
+
+-How do you make the motor rotate the other way?
+Use negative speed or rotation.
+
+-Minimum and maximum values for speed and position?
+Speed: -100 to 100
+Position: INT_MIN to INT_MAX

@@ -1,0 +1,7 @@
+-Does it go straight?
+One of the engines start before the other one, which makes it turn slightly in the beginning.
+
+-Does the motors start at the same time?
+No, one motor starts < 0.5s before the other one.
+
+-Can you fix that?
