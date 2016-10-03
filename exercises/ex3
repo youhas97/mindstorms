@@ -5,3 +5,4 @@ One of the engines start before the other one, which makes it turn slightly in t
 No, one motor starts < 0.5s before the other one.
 
 -Can you fix that?
+Yes, by using the start_motors() function.
