@@ -1,7 +1,7 @@
-from ev3 import Ev3
+from src.api.ev3 import Ev3
 from time import sleep
 from random import randint
-test_unit = Ev3('169.254.20.123')
+test_unit = Ev3('192.168.0.111')
 mot_b = test_unit.add_motor('B')
 mot_c = test_unit.add_motor('C')
 touch_sensor = test_unit.add_sensor(1, 'touch')
@@ -19,7 +19,6 @@ def turn_degree_two_track(degree, left, right):
     right.run_position_limited(100, -degree*conversion, brake='hold', run=False)
     left.run_position_limited(100, degree*conversion, brake='hold', run=False)
     test_unit.start_motors(['B','C'])
-
 
 #turn_degree_two_track(360, mot_c, mot_b)
 #test_unit.start_motors(['B','C'])
