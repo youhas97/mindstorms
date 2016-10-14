@@ -8,7 +8,7 @@ def main():
 
 
     unit.forward(10)
-    #hellp:
+    #hellp: stuffs
 
     while True:
         mode = patrol(unit)
