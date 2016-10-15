@@ -1,0 +1,13 @@
+Progress Report 2
+
+Group Summary:
+We have finished the last exercises and begun working on the HT2 project. We have rebuilt the ev3 unit and tried to setup environments for individual work. Making sure everyone know how to use git and are able to write and run code for the unit. We've had some issues with this. The Windows computers only run Python2, have no built-in Wi-Fi/Bluetooth, no path environement variables (for git, python). This makes the lab computers cumbersome to use when handling git repos and sending code to the unit.
+
+Individual summaries:
+
+Noah:
+I have attended all the lab sessions as well as worked for about 3h at home, resulting in a total of 11h. My time have been spent on:
+-finishing the last exercises
+-creating a Unit class for grouping all functions and variables specific to our unit in to one object (including the Ev3 class functions). This avoids using global variables or sending lots of parameters to functions.
+-creating a MockBot class, for testing code without access to the robot (by placing it befor Ev3 in the MRO).
+-helping others set up environments and learn git.
