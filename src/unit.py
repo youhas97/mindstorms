@@ -5,12 +5,12 @@ from time import sleep
 class Unit(Ev3):
     def __init__(self, ip):
         super().__init__(ip)
-        self.wheels = ['B', 'C']
+        self.wheels = ['D', 'A']
         self.left = self.add_motor(self.wheels[0])
         self.right = self.add_motor(self.wheels[1])
-        self.gun = self.add_motor('A')
-        self.ir_sensor = self.add_sensor(4, 'IR')
-        self.color_sensor = self.add_sensor(1, 'color')
+        self.gun = self.add_motor('B')
+        self.ir_sensor = self.add_sensor(2, 'IR')
+        self.color_sensor = self.add_sensor(3, 'color')
 
     def forward(self, velocity):
         self.left.run_forever(-velocity, run=False)
