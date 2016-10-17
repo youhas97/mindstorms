@@ -27,6 +27,9 @@ class Unit(Ev3):
         self.left.run_position_limited(velocity, -rotation, run=False)
         self.start_motors(self.wheels)
 
+    def seek(self, channel):
+        return self.ir_sensor.get_seek()[channel-1]
+
     def shoot(self):
         self.gun.run_forever(10)
 
