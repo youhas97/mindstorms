@@ -1,16 +1,22 @@
 from api.ev3 import Ev3
 
-from time import sleep
-
 class Unit(Ev3):
     def __init__(self, ip):
         super().__init__(ip)
-        self.wheels = ['B', 'C']
+
+        # ports
+        left_motor =    'D'
+        right_motor =   'A'
+        gun =           'B'
+        ir_sensor =     2
+        color_sensor =  3
+
+        self.wheels = [left_motor, right_motor]
         self.left = self.add_motor(self.wheels[0])
         self.right = self.add_motor(self.wheels[1])
-        self.gun = self.add_motor('A')
-        self.ir_sensor = self.add_sensor(4, 'IR')
-        self.color_sensor = self.add_sensor(1, 'color')
+        self.gun = self.add_motor(gun)
+        self.ir_sensor = self.add_sensor(ir_sensor, 'IR')
+        self.color_sensor = self.add_sensor(color_sensor, 'color')
 
     def forward(self, velocity):
         self.left.run_forever(-velocity, run=False)
@@ -18,7 +24,8 @@ class Unit(Ev3):
         self.start_motors(self.wheels)
 
     def stop(self):
-        self.stop_motors(self.wheels)
+        self.stop_mo
+        tors(self.wheels)
 
     def rotate(self, velocity, degrees):
         conversion = 5.3
