@@ -24,8 +24,7 @@ class Unit(Ev3):
         self.start_motors(self.wheels)
 
     def stop(self):
-        self.stop_mo
-        tors(self.wheels)
+        self.stop_motors(self.wheels)
 
     def rotate(self, velocity, degrees):
         conversion = 5.3
@@ -36,6 +35,9 @@ class Unit(Ev3):
 
     def seek(self, channel):
         return self.ir_sensor.get_seek()[channel-1]
+
+    def prox(self):
+        return self.ir_sensor.get_prox()
 
     def shoot(self):
         self.gun.run_forever(10)
