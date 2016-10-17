@@ -1,0 +1,29 @@
+Progress Report 2
+
+Group Summary:
+We have finished the last exercises and begun working on the HT2 project. We have rebuilt the ev3 unit and tried to setup environments for individual work. Making sure everyone know how to use git and are able to write and run code for the unit. We've had some issues with this. The Windows computers only run Python2, have no built-in Wi-Fi/Bluetooth, no path environement variables (for git, python). This makes the lab computers cumbersome to use when handling git repos and sending code to the unit.
+
+Individual summaries:
+
+Noah:
+I have attended all the lab sessions as well as worked for about 3h at home, resulting in a total of 11h. My time have been spent on:
+-finishing the last exercises
+-creating a Unit class for grouping all functions and variables specific to our unit in to one object (including the Ev3 class functions). This avoids using global variables or sending lots of parameters to functions.
+-creating a MockBot class, for testing code without access to the robot (by placing it befor Ev3 in the MRO).
+-helping others set up environments and learn git.
+
+Yousef:
+I have attended all lab sessions and have done nothing beyond the labs. This resulted in a total of 8h, which have been spent on:
+-finishing the last exercises.
+-learning and understanding how git works.
+-reaching milestone 1 by rebuilding the robot into the new robot we chose to work with.
+-help reaching milestone 2 by contributing with ideas regarding small changes to the code.
+-give some ideas on how to solve milestone 3.
+
+Yohan:
+I have attended all lab sessions and have done nothing beyond the labs. This resulted in a total of 8h, which have been spent on:
+-Helping with finishing the last exercises.
+-Learning to understand how git works with the guidance of Noah.
+-Reaching milestone 1 by rebuilding the entire robot with Yousef.
+-Coming with ideas on how we can solve milestone 3.
+-Some coding to help reach milestone 3.
