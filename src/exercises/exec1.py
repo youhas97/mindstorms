@@ -58,7 +58,3 @@ while True:
         mot_c.run_forever(100, run=False)
         test_unit.start_motors(motors)
     sleep(0.1)
-
-    
-        
-        

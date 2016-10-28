@@ -1,10 +1,10 @@
 from api.ev3 import Ev3
 
-test_unit = Ev3('192.168.0.111')
-ir_sensor = test_unit.add_sensor(3, 'IR')
+test_unit = Ev3('192.168.43.11')
+ir_sensor = test_unit.add_sensor(2,'IR')
 
-motor_left = test_unit.add_motor('C')
-motor_right = test_unit.add_motor('B')
+motor_left = test_unit.add_motor('D')
+motor_right = test_unit.add_motor('A')
 
 def forward():
     motor_left.run_forever(100)
@@ -31,7 +31,7 @@ def turn_degree_two_track(degree, left, right):
 def turn_right(vel):
     motor_right.run_forever(-vel, run=False)
     motor_left.run_forever(vel, run=False)
-    test_unit.start_motors(['C', 'B'])
+    test_unit.start_motors(['D', 'A'])
 
 def turn_left(vel):
     motor_right.run_forever(vel, run=False)
@@ -42,10 +42,17 @@ channel = 1
 error_margin = 5
 velocity = 25
 
+"""
 while True:
     angle, distance = ir_sensor.get_seek()[channel-1]
     if angle > error_margin: turn_right(velocity)
     elif angle < -error_margin: turn_left(velocity)
     else: forward()
     print(angle, distance)
+"""
 
+velocity = 1
+
+while True:
+    angle, distance = ir_sensor.get_seek()[channel-1]
+    turn_right(-min(int(velocity*angle), 100))

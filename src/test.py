@@ -4,17 +4,13 @@ from unit import Unit
 from mockbot import MockedEv3
 
 def main():
-    unit = Unit('192.168.0.111')
-
-
-    unit.forward(10)
-    #hellp: stuffs
+    unit = Unit('192.168.43.11')
 
     while True:
         mode = patrol(unit)
 
 def patrol(unit):
-    print(unit.ir_sensor.get_prox())
+    print(unit.prox())
     return patrol
 
 
