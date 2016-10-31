@@ -1,4 +1,5 @@
 from api.ev3 import Ev3
+from time import sleep, time
 
 class Unit(Ev3):
     def __init__(self, ip):
@@ -17,6 +18,8 @@ class Unit(Ev3):
         self.gun = self.add_motor(gun)
         self.ir_sensor = self.add_sensor(ir_sensor, 'IR')
         self.color_sensor = self.add_sensor(color_sensor, 'color')
+
+        self.speed = 0
 
     def forward(self, speed):
         """Make the unit go forward."""
@@ -52,8 +55,8 @@ class Unit(Ev3):
         self.gun.run_forever(speed)
 		
     def stop_gun(self):
-	    """stops the unit's gun"""
-	    self.gun.stop()
+        """Stop the unit's gun."""
+        self.gun.stop()
 
     def turn(self, direction):
         """Turn unit while moving.
@@ -100,6 +103,18 @@ class Unit(Ev3):
 
         self.left.run_forever(-round(left_vel))
         self.right.run_forever(-round(right_vel))
+
+    def check_movement(self, time_interval, distance_margin):
+        """Check for movement with proximity sensors"""
+        time_start = time()
+        distance_min = distance_max = self.prox()
+        while time()-time_start < time_interval:
+            distance = self.prox()
+            if distance < distance_min: distance_min = distance
+            if distance > distance_max: distance_max = distance
+            if distance_max-distance_min > distance_margin: return True
+
+        return distance_max-distance_min > distance_margin
 
 def main():
     pass

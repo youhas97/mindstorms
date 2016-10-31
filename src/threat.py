@@ -8,17 +8,21 @@ distance = 55
 
 def threat():
     unit = Unit('192.168.0.111')
-while True:
-    prox = unit.ir_sensor.get_prox()
-    print(prox)
-    if prox <= distance+error_margin:
-	    unit.speak('Get out')
-	    sleep(2)
-		if prox <= distance+error_margin:
-		   unit.speak('say hello to my little friend')
-		   unit.rotate(100,170)
-		   unit.start_gun()
-		   sleep(2)
-		   unit.stop_gun()
+	
+    while True:
+        """checks if encountered object is an intruder and attacks"""
+        prox = unit.ir_sensor.get_prox()
+        print(prox)
+        if prox <= distance+error_margin:
+            if 
+            if prox <= distance+error_margin:
+                unit.rotate(100,135)
+                sleep(0.8)
+                unit.speak('Say hello to my little friend')
+                sleep(2.6)
+                unit.start_gun(100)
+                sleep(4)
+                unit.stop_gun()
+threat()
 		   
 		
