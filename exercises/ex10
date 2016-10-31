@@ -1,0 +1,5 @@
+Q: How random is random.randint()?
+
+A: Pseudo-random.Det är inte så random eftersom det är baserat på en algoritm då
+datorn inte kan skapa randomness. Om algoritmen är känd så kan man få ut värdet
+på random.randint().
