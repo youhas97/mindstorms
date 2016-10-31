@@ -47,13 +47,13 @@ class Unit(Ev3):
         """Parse proximity value from IR sensor."""
         return self.ir_sensor.get_prox()
 
-    def start_gun(self):
+    def start_gun(self, speed):
         """Fire the unit's gun."""
-        self.gun.run_forever(10)
+        self.gun.run_forever(speed)
 		
     def stop_gun(self):
-	   """stops the unit's gun"""
-	   self.gun.stop()
+	    """stops the unit's gun"""
+	    self.gun.stop()
 
     def turn(self, direction):
         """Turn unit while moving.
