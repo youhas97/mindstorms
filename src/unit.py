@@ -28,36 +28,6 @@ class Unit(Ev3):
         self.right.run_forever(-self.speed, run=False)
         self.start_motors(self.wheels)
 
-    def stop(self):
-        """Stop the unit."""
-        self.speed = 0
-        self.stop_motors(self.wheels)
-
-    def rotate(self, speed, degrees):
-        """Rotate the unit."""
-        self.speed = 0
-        conversion = 5.3
-        rotation = int(conversion*degrees)
-        self.right.run_position_limited(speed, rotation, run=False)
-        self.left.run_position_limited(speed, -rotation, run=False)
-        self.start_motors(self.wheels)
-
-    def seek(self, channel):
-        """ Parse seek values from IR sensor """
-        return self.ir_sensor.get_seek()[channel-1]
-
-    def prox(self):
-        """Parse proximity value from IR sensor."""
-        return self.ir_sensor.get_prox()
-
-    def start_gun(self, speed):
-        """Fire the unit's gun."""
-        self.gun.run_forever(speed)
-		
-    def stop_gun(self):
-        """Stop the unit's gun."""
-        self.gun.stop()
-
     def turn(self, direction):
         """Turn unit while moving.
         
@@ -74,7 +44,7 @@ class Unit(Ev3):
             self.speed = 90, direction = 0.75:
             left_vel = 100, right_vel = 25
 
-        Math:
+        Derivation:
             vel_quotient/direction decides the ratio of speed
             between the two wheels, therefore deciding the 
             turn radius:
@@ -88,7 +58,7 @@ class Unit(Ev3):
                 ( max_vel + min_vel ) / 2 = self.speed
                     --> max_vel = 2 * vel_quotient / self.speed
         """
-
+        if type(direction == complex):  direction = direction.imag
         assert -1 <= direction <= 1
         vel_quotient = 1 - abs(direction)
         
@@ -104,8 +74,48 @@ class Unit(Ev3):
         self.left.run_forever(-round(left_vel))
         self.right.run_forever(-round(right_vel))
 
+    def stop(self):
+        """Stop the unit."""
+        self.speed = 0
+        self.stop_motors(self.wheels)
+
+    def rotate(self, speed, degrees):
+        """Rotate the unit."""
+        self.speed = 0
+        conversion = 5.3
+        rotation = int(conversion*degrees)
+        self.right.run_position_limited(speed, rotation, run=False)
+        self.left.run_position_limited(speed, -rotation, run=False)
+        self.start_motors(self.wheels)
+    
+    def start_gun(self, speed):
+        """Fire the unit's gun."""
+        self.gun.run_forever(speed)
+		
+    def stop_gun(self):
+        """Stop the unit's gun."""
+        self.gun.stop()
+
+    def seek(self, channel):
+        """Parse seek values from IR sensor """
+        return self.ir_sensor.get_seek()[channel-1]
+
+    def prox(self):
+        """Parse proximity value from IR sensor."""
+        return self.ir_sensor.get_prox()
+
     def check_movement(self, time_interval, distance_margin):
-        """Check for movement with proximity sensors"""
+        """Check for movement with proximity sensors.
+
+        Params:
+            time_interval -- the maximum time to wait for 
+                             movement
+            distance_margin -- the variation in distance
+                               which counts as movement
+
+        Return:
+            True, if movement has been detected, otherwise False.
+        """
         time_start = time()
         distance_min = distance_max = self.prox()
         while time()-time_start < time_interval:
@@ -113,11 +123,3 @@ class Unit(Ev3):
             if distance < distance_min: distance_min = distance
             if distance > distance_max: distance_max = distance
             if distance_max-distance_min > distance_margin: return True
-
-        return distance_max-distance_min > distance_margin
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    main()
