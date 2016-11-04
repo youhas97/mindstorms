@@ -1,0 +1,25 @@
+Progress Report 3 
+
+Group summary:
+We have completed milestone 3 and begun working on milestone 4,6 and 7. We have also begun coding our GUI and we are currently working on making the robot follow the black lines.
+
+Yohan:
+I have attended the majority of the lab sessions and have done nothing beyond the labs. This resulted in a total of 10h, which have been spent on:
+- Almost finishing milestone 6 and 7
+- trying to learn git and constantly rehearse it with the guidance of Noah
+- Discussing and contributing with ideas on how to solve milestone 4
+
+Noah:
+I have spent 12h on lab sessions and about 4h at home.
+- wrote a turn method for the unit class (changes motor speeds depending on the units speed and the turn value [-1, 1] given as a parameter).
+- wrote a check movement for the unit class (checks for variation in the motion sensors during a time interval). Might need a rework without a sleep call (it halts the whole program).
+- wrote docstrings for unit class
+- testing and trying to implement a method for following the tape using the turn function.
+- testing, disussing, thinking about implementing everything into the GUI without halting it with while loops and sleeps. (maybe with threads or integrating loop iterations into the main loop and replacing sleep calls with time comparisons)
+
+Yousef:
+I have spent 12h on lab sessions and about 1h at home.
+- Learning and understanding how Tkinter works.
+- Wrote the base for the gui and made interactive buttons.
+- Implemented different layers of windows so every button leads to another "new" window.
+- Giving ideas on how to solve the tape problem.
