@@ -58,7 +58,8 @@ class Unit(Ev3):
                 ( max_vel + min_vel ) / 2 = self.speed
                     --> max_vel = 2 * vel_quotient / self.speed
         """
-        if type(direction == complex):  direction = direction.imag
+        direction = direction.imag + direction.real
+        print(direction)
         assert -1 <= direction <= 1
         vel_quotient = 1 - abs(direction)
         
