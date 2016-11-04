@@ -61,14 +61,11 @@ class Unit(Ev3):
         assert -1 <= direction <= 1
         vel_quotient = 1 - abs(direction)
         
-        if direction == 0:
-            left_vel = right_vel = self.speed
-        else:
-            max_vel = 2 / (vel_quotient + 1) * self.speed
-            if max_vel > 100: max_vel = 100
-            min_vel = max_vel * vel_quotient
-            if direction > 0: left_vel, right_vel = max_vel, min_vel
-            else:             left_vel, right_vel = min_vel, max_vel
+        max_vel = 2 / (vel_quotient + 1) * self.speed
+        if max_vel > 100: max_vel = 100
+        min_vel = max_vel * vel_quotient
+        if direction > 0: left_vel, right_vel = max_vel, min_vel
+        else:             left_vel, right_vel = min_vel, max_vel
 
         self.left.run_forever(-round(left_vel))
         self.right.run_forever(-round(right_vel))
@@ -103,6 +100,13 @@ class Unit(Ev3):
         """Parse proximity value from IR sensor."""
         return self.ir_sensor.get_prox()
 
+    def color(self):
+        """Parse color from color sensor and return corresponding string."""
+        color_number = self.color_sensor.get_color()
+        color_tuple = ('none', 'black', 'blue', 'green',
+                        'yellow', 'red', 'white', 'brown')
+        return color_tuple[color_number]
+
     def check_movement(self, time_interval, distance_margin):
         """Check for movement with proximity sensors.
 
@@ -119,6 +123,6 @@ class Unit(Ev3):
         distance_min = distance_max = self.prox()
         while time()-time_start < time_interval:
             distance = self.prox()
-            if distance < distance_min: distance_min = distance
-            if distance > distance_max: distance_max = distance
+            distance_min = min(distance, distance_min)
+            distance_max = max(distance, distance_max)
             if distance_max-distance_min > distance_margin: return True
