@@ -20,17 +20,18 @@ class Patrol():
             unit.forward(self.speed)
         elif prox <= self.distance * 1.25 or reflection <=6 or color==0:
             unit.stop()
-            if prox <= self.distance * 1.25:
-                unit.speak('piss off cunt')
-                sleep(1.7)
-            
+            #if prox <= self.distance * 1.25:
+             #   unit.speak('piss off cunt')
+            #    sleep(1.7)
+            unit.forward(-self.speed)
+            sleep(0.8)
+            unit.stop()
             unit.rotate(100,direction*randint(90,180))
             sleep(2)
 
 if __name__ == '__main__':
     unit = Unit('192.168.0.112')
     patrol_mode = Patrol(speed=100)
-    while True:
-        patrol_mode.run(unit)
+  
         
             
