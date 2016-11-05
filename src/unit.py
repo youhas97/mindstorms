@@ -107,6 +107,10 @@ class Unit(Ev3):
                         'yellow', 'red', 'white', 'brown')
         return color_tuple[color_number]
 
+    def reflect(self):
+        """Parse reflection value from color sensor"""
+        return self.ir_sensor.get_reflect()
+
     def check_movement(self, time_interval, distance_margin):
         """Check for movement with proximity sensors.
 
