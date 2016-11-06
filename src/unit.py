@@ -21,9 +21,14 @@ class Unit(Ev3):
 
         self.speed = 0
 
+    def set_speed(self, speed):
+        """Set speed of unit"""
+        self.speed = min(max(speed, -100), 100)
+        return self.speed
+
     def forward(self, speed):
         """Make the unit go forward."""
-        self.speed = speed
+        self.set_speed(speed)
         self.left.run_forever(-self.speed, run=False)
         self.right.run_forever(-self.speed, run=False)
         self.start_motors(self.wheels)
@@ -45,25 +50,25 @@ class Unit(Ev3):
             left_vel = 100, right_vel = 25
 
         Derivation:
-            vel_quotient/direction decides the ratio of speed
+            speed_ratio/direction decides the ratio of speed
             between the two wheels, therefore deciding the 
             turn radius:
-                min_vel / max_vel = vel_quotient
-                    --> min_vel = max_vel * vel_quotient
+                min_vel / max_vel = speed_ratio
+                    --> min_vel = max_vel * speed_ratio
 
             In order to not slow down the unit during turning, 
             the average speed of the wheels should be the 
             current speed of the unit (as long as it doesnt
             exceed motors' the speed limit):
                 ( max_vel + min_vel ) / 2 = self.speed
-                    --> max_vel = 2 * vel_quotient / self.speed
+                    --> max_vel = 2 * speed_ratio / self.speed
         """
         assert -1 <= direction <= 1
-        vel_quotient = 1 - abs(direction)
+        speed_ratio = 1 - abs(direction)
         
-        max_vel = 2 / (vel_quotient + 1) * self.speed
+        max_vel = 2 / (speed_ratio + 1) * self.speed
         if max_vel > 100: max_vel = 100
-        min_vel = max_vel * vel_quotient
+        min_vel = max_vel * speed_ratio
         if direction > 0: left_vel, right_vel = max_vel, min_vel
         else:             left_vel, right_vel = min_vel, max_vel
 
@@ -109,7 +114,7 @@ class Unit(Ev3):
 
     def reflect(self):
         """Parse reflection value from color sensor"""
-        return self.ir_sensor.get_reflect()
+        return self.color_sensor.get_reflect()
 
     def check_movement(self, time_interval, distance_margin):
         """Check for movement with proximity sensors.
