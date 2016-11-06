@@ -2,7 +2,11 @@ from unit import Unit
 from time import sleep, time
 
 class FollowTape():
-    """Follow tape on the floor."""
+    """Follow tape on the floor.
+    
+    Public methods:
+        run -- Run an iteration of the follow tape mode.
+    """
 
     def __init__(self, unit):
         self.offset = self.offset_prev = 0
@@ -30,13 +34,13 @@ class FollowTape():
         """Adjust offset value to edge of tape.
 
         Description:
-            The reflection has a min and max value.
-            The value in between min and max is
-            considered the edge of the tape.
-            The offset is set to 1 if reflection
-            is at max, 0 if in the middle, -1
-            if at min, and any value between those.
+            The reflection has a min and max value. The value
+            in between (pivot) min and max is considered the
+            edge of the tape. The offset is set to 1 if
+            reflection is at max, 0 if in the middle, -1 if
+            at min, and any value between those (continous).
         """
+        self.offset_prev = self.offset
         pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
         if self.refl_max != self.refl_min:
             self.offset = (self.refl - pivot) / (self.refl_interval / 2)
@@ -79,7 +83,8 @@ class FollowTape():
 
         Description:
             Should be run from a while loop. Executes all 
-            methods needed to follow the tape.
+            methods needed to follow the tape. Variables
+            accross iterations are stored in the object.
         """
         #self.update_color(unit) #slows down main loop, slow enough to fail tape follow
         self.update_reflection(unit)
