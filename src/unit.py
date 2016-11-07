@@ -88,14 +88,10 @@ class Unit(Ev3):
         self.right.run_position_limited(speed, rotation, run=False)
         self.left.run_position_limited(speed, -rotation, run=False)
         self.start_motors(self.wheels)
-    
-    def start_gun(self, speed):
-        """Fire the unit's gun."""
-        self.gun.run_forever(speed)
-		
-    def stop_gun(self):
-        """Stop the unit's gun."""
-        self.gun.stop()
+
+    def shoot(self, shots=1):
+        """Fires amount of shots you want"""
+        self.gun.run_time_limited(100, 1190*shots)
 
     def seek(self, channel):
         """Parse seek values from IR sensor """
