@@ -13,9 +13,10 @@ class FollowTape():
         self.refl = self.refl_prev = unit.reflect()
         self.refl_min = self.refl_max = self.refl
         self.refl_interval = self.refl_max - self.refl_min
-        self.k_p = 1
-        self.k_d = 1.5
-        self.turn = self.turn_prev = 0        self.direction = 1
+        self.K_DERIVATIVE = 1
+        self.K_PROPORTIONAL = 1.5
+        self.turn = self.turn_prev = 0
+        self.direction = 1
         self.refl_min_turn = self.refl_max_turn = self.refl
 
         unit.forward(10)
@@ -81,8 +82,8 @@ class FollowTape():
 
     def set_turn(self):
         self.turn_prev = self.turn
-        self.turn = self.offset * self.k_p \
-                  + self.k_d * (self.offset - self.offset_prev)
+        self.turn = self.K_PROPORTIONAL * self.offset \
+                  + self.K_DERIVATIVE * (self.offset - self.offset_prev)
         self.turn *= self.direction
         self.turn /= float(max(self.k_d, self.k_p))
 
