@@ -14,11 +14,12 @@ class FollowTape():
         self.refl_min = self.refl_max = self.refl
         self.refl_interval = self.refl_max - self.refl_min
         self.k_p = 1
-        self.k_d = 1
+        self.k_d = 1.5
         self.turn = self.turn_prev = 0
         self.direction = 1
-
         self.refl_min_turn = self.refl_max_turn = self.refl
+
+        unit.forward(10)
 
     def update_color(self, unit):
         self.color = unit.color()
@@ -41,9 +42,9 @@ class FollowTape():
             at min, and any value between those (continous).
         """
         self.offset_prev = self.offset
-        pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
+        self.pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
         if self.refl_max != self.refl_min:
-            self.offset = (self.refl - pivot) / (self.refl_interval / 2)
+            self.offset = (self.refl - self.pivot) / (self.refl_interval / 2)
         else:
             self.offset = 0
 
@@ -55,7 +56,8 @@ class FollowTape():
             Decreases speed if reflection has high variation.
         """
         if abs(self.refl != self.refl_prev) < 2:
-            unit.set_speed(unit.speed+1)
+            if self.offset < 0:
+                unit.set_speed(unit.speed+1)
         else:
             unit.set_speed(unit.speed-10*abs(self.refl-self.refl_prev))
 
@@ -74,9 +76,18 @@ class FollowTape():
             self.refl_min_turn = min(self.refl_min_turn, self.refl)
             self.refl_max_turn = max(self.refl_max_turn, self.refl)
             if self.refl_max_turn - self.refl_min_turn > self.refl_interval * 0.5:
-                self.direction = not self.direction
+                self.direction = -self.direction
         else:
             self.refl_min_turn = self.refl_max_turn = self.refl
+
+    def set_turn(self):
+        self.turn_prev = self.turn
+        self.turn = self.offset_prev * self.k_p \
+                  + self.k_d * (self.offset - self.offset_prev)
+        print(1, self.turn)
+        self.turn *= self.direction
+        print(2, self.turn)
+        self.turn /= float(max(self.k_d, self.k_p))
 
     def run(self, unit):
         """Run the follow tape mode.
@@ -90,11 +101,10 @@ class FollowTape():
         self.update_reflection(unit)
         self.set_offset(unit)
         self.set_speed(unit)
-        self.set_direction()
-        self.turn_prev = self.turn
-        self.turn = self.offset_prev*self.k_p+self.k_d*(self.offset-self.offset_prev) * self.direction
+        #self.set_direction()
+        self.set_turn()
+        print(self.offset, self.turn)
         unit.turn(self.turn)
-        print(self.refl)
 
         """"
         # turn right at red tape
