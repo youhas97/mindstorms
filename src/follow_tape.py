@@ -12,27 +12,18 @@ class FollowTape():
         self.offset = self.offset_prev = 0
         self.refl = self.refl_prev = unit.reflect()
         self.refl_min = self.refl_max = self.refl
-        self.refl_interval = self.refl_max - self.refl_min
-        self.K_DERIVATIVE = 1
-        self.K_PROPORTIONAL = 1.5
         self.turn = self.turn_prev = 0
         self.direction = 1
-        self.refl_min_turn = self.refl_max_turn = self.refl
-
-        unit.forward(10)
-
-    def update_color(self, unit):
-        self.color = unit.color()
+        self.refl_min_turn = self.refl_max_turn = self.refl = 0
 
     def update_reflection(self, unit):
         """Parse reflection from unit and set min/max values."""
         self.refl = unit.reflect()
         self.refl_min = min(self.refl_min, self.refl)
         self.refl_max = max(self.refl_max, self.refl)
-        self.refl_interval = self.refl_max - self.refl_min
 
-    def set_offset(self, unit):
-        """Adjust offset value to edge of tape.
+    def calculate_offset(self):
+        """Calculate offset value to edge of tape.
 
         Description:
             The reflection has a min and max value. The value
@@ -42,14 +33,15 @@ class FollowTape():
             at min, and any value between those (continous).
         """
         self.offset_prev = self.offset
-        self.pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
-        if self.refl_max != self.refl_min:
-            self.offset = (self.refl - self.pivot) / (self.refl_interval / 2)
+        pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
+        interval = self.refl_max - self.refl_min
+        if interval != 0:
+            self.offset = (self.refl-pivot) / (interval/2)
         else:
             self.offset = 0
 
-    def set_speed(self, unit):
-        """Automatically adjust speed of vehicle.
+    def adjust_speed(self, unit):
+        """Control speed of unit.
     
         Description:
             Increases speed if reflection has low variation.
@@ -61,7 +53,7 @@ class FollowTape():
         else:
             unit.set_speed(unit.speed-10*abs(self.refl-self.refl_prev))
 
-    def set_direction(self):
+    def adjust_direction(self):
         """Control direction multiplier.
 
         Description:
@@ -80,12 +72,18 @@ class FollowTape():
         else:
             self.refl_min_turn = self.refl_max_turn = self.refl
 
-    def set_turn(self):
+    def adjust_turn(self, unit):
+        """Control turn value for unit."""
+        DERIVATIVE_COEFF = 1
+        PROPORTIONAL_COEFF = 1.5
+
         self.turn_prev = self.turn
-        self.turn = self.K_PROPORTIONAL * self.offset \
-                  + self.K_DERIVATIVE * (self.offset - self.offset_prev)
+        self.turn = PROPORTIONAL_COEFF * self.offset \
+                  + DERIVATIVE_COEFF * (self.offset - self.offset_prev)
         self.turn *= self.direction
         self.turn /= float(max(self.k_d, self.k_p))
+
+        unit.turn(self.turn)
 
     def run(self, unit):
         """Run the follow tape mode.
@@ -95,23 +93,11 @@ class FollowTape():
             methods needed to follow the tape. Variables
             accross iterations are stored in the object.
         """
-        #self.update_color(unit) #slows down main loop, slow enough to fail tape follow
         self.update_reflection(unit)
-        self.set_offset(unit)
-        self.set_speed(unit)
-        #self.set_direction()
-        self.set_turn()
-        print(self.offset, self.turn)
-        unit.turn(self.turn)
-
-        """"
-        # turn right at red tape
-        if 8 <= self.refl <= 21:
-            if unit.color() == 'red':
-                print('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeej')
-                self.turn = 1
-                unit.set_speed(0)
-        """
+        self.calculate_offset()
+        self.adjust_speed(unit)
+        self.adjust_direction()
+        self.adjust_turn(unit)
 
 if __name__ == '__main__':
     unit = Unit('192.168.0.112')
