@@ -12,6 +12,7 @@ class FollowTape():
         self.offset = self.offset_prev = 0
         self.refl = self.refl_prev = unit.reflect()
         self.refl_min = self.refl_max = self.refl
+        self.refl_interval = 0
         self.turn = self.turn_prev = 0
         self.direction = 1
         self.refl_min_turn = self.refl_max_turn = self.refl = 0
@@ -34,9 +35,9 @@ class FollowTape():
         """
         self.offset_prev = self.offset
         pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
-        interval = self.refl_max - self.refl_min
-        if interval != 0:
-            self.offset = (self.refl-pivot) / (interval/2)
+        self.refl_interval = self.refl_max - self.refl_min
+        if self.interval != 0:
+            self.offset = (self.refl-pivot) / (self.refl_interval/2)
         else:
             self.offset = 0
 
@@ -81,8 +82,7 @@ class FollowTape():
         self.turn = PROPORTIONAL_COEFF * self.offset \
                   + DERIVATIVE_COEFF * (self.offset - self.offset_prev)
         self.turn *= self.direction
-        self.turn /= float(max(self.k_d, self.k_p))
-
+        self.turn /= float(PROPORTIONAL_COEFF + DERIVATIVE_COEFF)
         unit.turn(self.turn)
 
     def run(self, unit):
@@ -98,6 +98,8 @@ class FollowTape():
         self.adjust_speed(unit)
         self.adjust_direction()
         self.adjust_turn(unit)
+
+        return self
 
 if __name__ == '__main__':
     unit = Unit('192.168.0.112')
