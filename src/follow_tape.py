@@ -36,7 +36,7 @@ class FollowTape():
         self.offset_prev = self.offset
         pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
         self.refl_interval = self.refl_max - self.refl_min
-        if self.interval != 0:
+        if self.refl_interval != 0:
             self.offset = (self.refl-pivot) / (self.refl_interval/2)
         else:
             self.offset = 0
@@ -75,14 +75,14 @@ class FollowTape():
 
     def adjust_turn(self, unit):
         """Control turn value for unit."""
-        DERIVATIVE_COEFF = 1
-        PROPORTIONAL_COEFF = 1.5
+        DERIVATIVE_COEFF =  3
+        PROPORTIONAL_COEFF = 1
 
         self.turn_prev = self.turn
         self.turn = PROPORTIONAL_COEFF * self.offset \
                   + DERIVATIVE_COEFF * (self.offset - self.offset_prev)
         self.turn *= self.direction
-        self.turn /= float(PROPORTIONAL_COEFF + DERIVATIVE_COEFF)
+        self.turn /= float(PROPORTIONAL_COEFF + DERIVATIVE_COEFF * 2)
         unit.turn(self.turn)
 
     def run(self, unit):
@@ -96,8 +96,10 @@ class FollowTape():
         self.update_reflection(unit)
         self.calculate_offset()
         self.adjust_speed(unit)
-        self.adjust_direction()
+        #self.adjust_direction()
         self.adjust_turn(unit)
+        
+        print(unit.speed)
 
         return self
 
