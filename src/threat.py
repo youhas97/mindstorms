@@ -29,10 +29,7 @@ class ThreatMode():
         sleep(0.8)
         unit.speak('Say hello to my little friend')
         sleep(2.6)
-        unit.start_gun(100)
-        sleep(4)
-        unit.stop_gun()
-        sleep(0.5)
+        unit.shoot(3)
         unit.rotate(100,150)
         sleep(2)
         
@@ -41,32 +38,22 @@ class ThreatMode():
         print(prox)
         if self.detect_threat(unit):
             self.shoot(unit)
+            if unit.prox()<=distance:
+                unit.forward(100)
         else:
             return patrol_proto.Patrol()
         print(self)
         return self
         
-        """
-    def KLADD():
+        
+    def surrender():
+        sleep(0.8)
+        unit.speak('I surrender')
+        sleep(0.5)
+        unit.rotate(100,170)
+        sleep(1.7)
 
-                        #if the object is still there after the atttack it surrenders
-                        if unit.prox()<=distance:
-                            sleep(0.8)
-                            unit.speak('I surrender')
-                            sleep(0.5)
-                            unit.rotate(100,170)
-                            sleep(1.7)
-                            unit.forward(100)
-                            if unit.prox()<=7:
-                                while unit.prox()<95:
-                                    unit.rotate(20,choice([-1,1])*100)
-                                    sleep(2.3)
-                                unit.forward(100)
-                                if unit.prox<=7:
-                                    break
-                                 """
-   
-    
+
 def main():
     unit = Unit('192.168.0.112')
     mode = ThreatMode()
