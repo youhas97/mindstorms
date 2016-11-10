@@ -1,0 +1,24 @@
+Progress report 4:
+    
+    Group summary:
+    We completed milestone 5, 6 and 7 which is making the robot patrol in the square and then detect,threaten and attack intruder. We modified our patrol and our threat files and made them into classes. We have begun working on making the robot follow the tape, a bit of progress but still not completly working yet.
+    
+    Yohan:
+    I have attended all of the lab sessions and have worked 6 hours. This resulted in a total of 16h, which have been spent on:
+    - Completing the patrol and threaten milestones with huge help of Noah
+    - Have tried to make the robot surrender hide in the corner, failed miserably, yet it was a try
+    - Rehearsing Git, as usual.
+    
+    Noah
+    I have spent 10h on lab sessions, 8h outside labs, totalling in 18h. I have spent these hours on:
+    - implementing the PID algorithm for following the edge of the tape.
+    - making the turn method also turn with negative values, thus rotating the unit on spot.
+    - helped Yohan's progress with patrol, surrender, threaten modules.
+    - helped Yousef with vim, colorschemes, arch linux, and all his other adventures closely related to the mindstorm project.
+    
+    Yousef:
+    Totalt 7 timmar utanför labbtid och alla (bara halva det sista) labbtillfällen vilket resulterar 17h, spenderat tiden med att: 
+    - Fixa min programmeringsmiljö, utan att lyckas
+    - Lade till en ny shoot function i unit 
+    - Hjälpte Noah lite med att följa tejpen men kom inte jättelångt, 
+    - Lade till en connect knapp i gui
