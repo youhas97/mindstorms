@@ -63,15 +63,23 @@ class Unit(Ev3):
                 ( max_vel + min_vel ) / 2 = self.speed
                     --> max_vel = 2 * speed_ratio / self.speed
         """
-        assert -1 <= direction <= 1
-        speed_ratio = 1 - abs(direction)
-        
-        max_vel = 2 / (speed_ratio + 1) * self.speed
-        if max_vel > 100: max_vel = 100
-        min_vel = max_vel * speed_ratio
+
+        if -1 <= direction <= 1:
+            # does not work if speed is negative 
+            speed_ratio = 1 - abs(direction)
+            max_vel = 2 / (speed_ratio + 1) * self.speed
+            if max_vel > 100: max_vel = 100
+            min_vel = max_vel * speed_ratio
+        elif -2 <= direction <= 2:
+            max_vel = self.speed
+            min_vel = max_vel - direction * self.speed
+        else:
+            print('unit: max turn direction exceeded -- {}'.format(direction))
+
         if direction > 0: left_vel, right_vel = max_vel, min_vel
         else:             left_vel, right_vel = min_vel, max_vel
-
+        
+        print(left_vel, right_vel)
         self.left.run_forever(-round(left_vel))
         self.right.run_forever(-round(right_vel))
 
@@ -131,3 +139,10 @@ class Unit(Ev3):
             distance_min = min(distance, distance_min)
             distance_max = max(distance, distance_max)
             if distance_max-distance_min > distance_margin: return True
+
+if __name__ == '__main__':
+    unit = Unit('192.168.0.112')
+    unit.forward(10)
+    unit.turn(2)
+    while True:
+        pass
