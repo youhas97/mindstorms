@@ -19,6 +19,7 @@ class FollowTape():
 
     def update_reflection(self, unit):
         """Parse reflection from unit and set min/max values."""
+        self.refl_prev = self.refl
         self.refl = unit.reflect()
         self.refl_min = min(self.refl_min, self.refl)
         self.refl_max = max(self.refl_max, self.refl)
@@ -48,11 +49,12 @@ class FollowTape():
             Increases speed if reflection has low variation.
             Decreases speed if reflection has high variation.
         """
-        if abs(self.refl != self.refl_prev) < 2:
-            if self.offset < 0:
-                unit.set_speed(unit.speed+1)
+        if abs(self.refl - self.refl_prev) < 2:
+            unit.set_speed(unit.speed+1)
         else:
-            unit.set_speed(unit.speed-10*abs(self.refl-self.refl_prev))
+            unit.set_speed(unit.speed-abs(self.refl-self.refl_prev))
+            if unit.speed < 0:
+                unit.set_speed(0)
 
     def adjust_direction(self):
         """Control direction multiplier.
@@ -75,14 +77,16 @@ class FollowTape():
 
     def adjust_turn(self, unit):
         """Control turn value for unit."""
-        DERIVATIVE_COEFF =  3
-        PROPORTIONAL_COEFF = 1
+        PROPORTIONAL_COEFF = 100
+        derivative_coeff = 0
 
         self.turn_prev = self.turn
         self.turn = PROPORTIONAL_COEFF * self.offset \
-                  + DERIVATIVE_COEFF * (self.offset - self.offset_prev)
+                  + derivative_coeff * (self.offset - self.offset_prev)
+        self.turn /= float(PROPORTIONAL_COEFF + derivative_coeff * 2)
+        #self.turn = self.offset * self.direction
         self.turn *= self.direction
-        self.turn /= float(PROPORTIONAL_COEFF + DERIVATIVE_COEFF * 2)
+        self.turn *= 2 # turn max
         unit.turn(self.turn)
 
     def run(self, unit):
@@ -99,8 +103,7 @@ class FollowTape():
         #self.adjust_direction()
         self.adjust_turn(unit)
         
-        print(unit.speed)
-
+        print(self.refl_min, self.refl, self.refl_max)
         return self
 
 if __name__ == '__main__':
