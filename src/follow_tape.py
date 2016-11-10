@@ -9,13 +9,19 @@ class FollowTape():
     """
 
     def __init__(self, unit):
-        self.offset = self.offset_prev = 0
-        self.refl = self.refl_prev = unit.reflect()
-        self.refl_min = self.refl_max = self.refl
+        self.offset = 0
+        self.offset_prev = 0
+
+        self.refl = unit.reflect()
+        self.refl_prev = self.refl
+        self.refl_min = self.refl
+        self.refl_max = self.refl
         self.refl_interval = 0
-        self.turn = self.turn_prev = 0
+
+        self.turn = 0
+        self.turn_prev = 0
+
         self.direction = 1
-        self.refl_min_turn = self.refl_max_turn = self.refl = 0
 
     def update_reflection(self, unit):
         """Parse reflection from unit and set min/max values."""
@@ -57,27 +63,12 @@ class FollowTape():
                 unit.set_speed(0)
 
     def adjust_direction(self):
-        """Control direction multiplier.
-
-        Description:
-            If the unit passes the tape during a turn
-            it encounters the other edge and the offset
-            becomes inverted (it turns right when it should
-            turn left and vice versa). This method changes
-            a multiplier and inverts the direction when
-            the unit passes the tape.
-        """
-        if self.turn * self.turn_prev > 0:
-            self.refl_min_turn = min(self.refl_min_turn, self.refl)
-            self.refl_max_turn = max(self.refl_max_turn, self.refl)
-            if self.refl_max_turn - self.refl_min_turn > self.refl_interval * 0.5:
-                self.direction = -self.direction
-        else:
-            self.refl_min_turn = self.refl_max_turn = self.refl
+        """Control direction multiplier."""
+        pass
 
     def adjust_turn(self, unit):
         """Control turn value for unit."""
-        PROPORTIONAL_COEFF = 100
+        PROPORTIONAL_COEFF = 1
         derivative_coeff = 0
 
         self.turn_prev = self.turn
@@ -85,8 +76,9 @@ class FollowTape():
                   + derivative_coeff * (self.offset - self.offset_prev)
         self.turn /= float(PROPORTIONAL_COEFF + derivative_coeff * 2)
         #self.turn = self.offset * self.direction
-        self.turn *= self.direction
-        self.turn *= 2 # turn max
+        #self.turn *= self.direction
+        self.turn *= 2 # max turn value
+
         unit.turn(self.turn)
 
     def run(self, unit):
