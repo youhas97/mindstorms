@@ -6,10 +6,11 @@ class FindCorner(FollowTape):
 
     def __init__(self, unit):
         super().__init__(unit)
-        unit.set_speed(0)
+        unit.set_speed(100)
         
     def in_corner(self, unit):
-        pass
+        if 15 <= self.refl <= 20 and unit.color() == 'red':
+            unit.stop()
      
     def run(self, unit):
         super().run(unit)
@@ -28,16 +29,14 @@ class Surrender():
         unit.forward(100)
         self.mode = FindCorner(unit).run
         
-        
     def run(self, unit):
         self.mode = self.mode(unit)
-        
+
         return self
         
     def find_tape(self, unit, next_mode):
         if unit.reflect() <= 8:
             self.mode = self.rotate_from_wall
-            
             
 if __name__ == '__main__':
     unit = Unit('192.168.0.112')
