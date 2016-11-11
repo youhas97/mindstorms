@@ -72,13 +72,15 @@ class Unit(Ev3):
             min_vel = max_vel * speed_ratio
         elif -2 <= direction <= 2:
             max_vel = self.speed
-            min_vel = max_vel - direction * self.speed
+            min_vel = max_vel - abs(direction) * self.speed
         else:
             print('unit: max turn direction exceeded -- {}'.format(direction))
 
         if direction > 0: left_vel, right_vel = max_vel, min_vel
         else:             left_vel, right_vel = min_vel, max_vel
-        
+       
+        print(self.speed)
+        print(direction)
         print(left_vel, right_vel)
         self.left.run_forever(-round(left_vel))
         self.right.run_forever(-round(right_vel))
