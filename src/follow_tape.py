@@ -23,12 +23,16 @@ class FollowTape():
 
         self.direction = 1
 
+        unit.set_speed(10)
+
     def update_reflection(self, unit):
         """Parse reflection from unit and set min/max values."""
         self.refl_prev = self.refl
         self.refl = unit.reflect()
         self.refl_min = min(self.refl_min, self.refl)
         self.refl_max = max(self.refl_max, self.refl)
+        self.refl_interval = self.refl_max - self.refl_min
+
 
     def calculate_offset(self):
         """Calculate offset value to edge of tape.
@@ -42,7 +46,6 @@ class FollowTape():
         """
         self.offset_prev = self.offset
         pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
-        self.refl_interval = self.refl_max - self.refl_min
         if self.refl_interval != 0:
             self.offset = (self.refl-pivot) / (self.refl_interval/2)
         else:
@@ -69,33 +72,36 @@ class FollowTape():
     def adjust_turn(self, unit):
         """Control turn value for unit."""
         PROPORTIONAL_COEFF = 1
-        derivative_coeff = 0
+        derivative_coeff = 0.25
 
         self.turn_prev = self.turn
         self.turn = PROPORTIONAL_COEFF * self.offset \
                   + derivative_coeff * (self.offset - self.offset_prev)
         self.turn /= float(PROPORTIONAL_COEFF + derivative_coeff * 2)
-        #self.turn = self.offset * self.direction
-        #self.turn *= self.direction
+        self.turn *= self.direction
         self.turn *= 2 # max turn value
 
-        unit.turn(self.turn)
-
     def run(self, unit):
-        """Run the follow tape mode.
+        """Run an iteration of the follow tape mode.
 
         Description:
-            Should be run from a while loop. Executes all 
+            Should be run from a loop. Executes all 
             methods needed to follow the tape. Variables
             accross iterations are stored in the object.
         """
         self.update_reflection(unit)
-        self.calculate_offset()
-        self.adjust_speed(unit)
-        #self.adjust_direction()
-        self.adjust_turn(unit)
+        print(self.refl_interval)
+        if self.refl_interval > 10:
+            self.calculate_offset()
+            self.adjust_speed(unit)
+            self.adjust_direction()
+            self.adjust_turn(unit)
+
+        unit.turn(self.turn)
+
+        print('ref', self.refl)
+        print('off', self.offset)
         
-        print(self.refl_min, self.refl, self.refl_max)
         return self
 
 if __name__ == '__main__':
@@ -104,4 +110,3 @@ if __name__ == '__main__':
 
     while True:
         follow_tape_mode.run(unit)
-
