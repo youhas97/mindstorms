@@ -23,8 +23,6 @@ class FollowTape():
 
         self.direction = 1
 
-        unit.set_speed(10)
-
     def update_reflection(self, unit):
         """Parse reflection from unit and set min/max values."""
         self.refl_prev = self.refl
@@ -90,7 +88,6 @@ class FollowTape():
             accross iterations are stored in the object.
         """
         self.update_reflection(unit)
-        print(self.refl_interval)
         if self.refl_interval > 10:
             self.calculate_offset()
             self.adjust_speed(unit)
@@ -98,9 +95,6 @@ class FollowTape():
             self.adjust_turn(unit)
 
         unit.turn(self.turn)
-
-        print('ref', self.refl)
-        print('off', self.offset)
         
         return self
 
