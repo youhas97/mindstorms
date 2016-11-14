@@ -1,8 +1,8 @@
 from unit import Unit
 from time import sleep
+
 import patrol_proto
-
-
+import surrender
 
 class ThreatMode():
 
@@ -21,7 +21,7 @@ class ThreatMode():
                         unit.speak(seconds)
                         sleep(1)    
                     else:
-                        break
+                        unit.stop()
                 return seconds == 'one'
             
     def shoot(self, unit):
@@ -38,20 +38,11 @@ class ThreatMode():
         print(prox)
         if self.detect_threat(unit):
             self.shoot(unit)
-            if unit.prox()<=distance:
-                unit.forward(100)
+            if unit.prox() <= distance:
+                return surrender.Surrender()
         else:
             return patrol_proto.Patrol()
-        print(self)
         return self
-        
-        
-    def surrender():
-        sleep(0.8)
-        unit.speak('I surrender')
-        sleep(0.5)
-        unit.rotate(100,170)
-        sleep(1.7)
 
 
 def main():

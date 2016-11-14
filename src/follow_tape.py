@@ -9,19 +9,28 @@ class FollowTape():
     """
 
     def __init__(self, unit):
-        self.offset = self.offset_prev = 0
-        self.refl = self.refl_prev = unit.reflect()
-        self.refl_min = self.refl_max = self.refl
+        self.offset = 0
+        self.offset_prev = 0
+
+        self.refl = unit.reflect()
+        self.refl_prev = self.refl
+        self.refl_min = self.refl
+        self.refl_max = self.refl
         self.refl_interval = 0
-        self.turn = self.turn_prev = 0
+
+        self.turn = 0
+        self.turn_prev = 0
+
         self.direction = 1
-        self.refl_min_turn = self.refl_max_turn = self.refl = 0
 
     def update_reflection(self, unit):
         """Parse reflection from unit and set min/max values."""
+        self.refl_prev = self.refl
         self.refl = unit.reflect()
         self.refl_min = min(self.refl_min, self.refl)
         self.refl_max = max(self.refl_max, self.refl)
+        self.refl_interval = self.refl_max - self.refl_min
+
 
     def calculate_offset(self):
         """Calculate offset value to edge of tape.
@@ -35,7 +44,6 @@ class FollowTape():
         """
         self.offset_prev = self.offset
         pivot = (self.refl_max - self.refl_min) / 2 + self.refl_min
-        self.refl_interval = self.refl_max - self.refl_min
         if self.refl_interval != 0:
             self.offset = (self.refl-pivot) / (self.refl_interval/2)
         else:
@@ -48,59 +56,46 @@ class FollowTape():
             Increases speed if reflection has low variation.
             Decreases speed if reflection has high variation.
         """
-        if abs(self.refl != self.refl_prev) < 2:
-            if self.offset < 0:
-                unit.set_speed(unit.speed+1)
+        if abs(self.refl - self.refl_prev) < 2:
+            unit.set_speed(unit.speed+1)
         else:
-            unit.set_speed(unit.speed-10*abs(self.refl-self.refl_prev))
+            unit.set_speed(unit.speed-abs(self.refl-self.refl_prev))
+            if unit.speed < 0:
+                unit.set_speed(0)
 
     def adjust_direction(self):
-        """Control direction multiplier.
-
-        Description:
-            If the unit passes the tape during a turn
-            it encounters the other edge and the offset
-            becomes inverted (it turns right when it should
-            turn left and vice versa). This method changes
-            a multiplier and inverts the direction when
-            the unit passes the tape.
-        """
-        if self.turn * self.turn_prev > 0:
-            self.refl_min_turn = min(self.refl_min_turn, self.refl)
-            self.refl_max_turn = max(self.refl_max_turn, self.refl)
-            if self.refl_max_turn - self.refl_min_turn > self.refl_interval * 0.5:
-                self.direction = -self.direction
-        else:
-            self.refl_min_turn = self.refl_max_turn = self.refl
+        """Control direction multiplier."""
+        pass
 
     def adjust_turn(self, unit):
         """Control turn value for unit."""
-        DERIVATIVE_COEFF =  3
         PROPORTIONAL_COEFF = 1
+        derivative_coeff = 0.25
 
         self.turn_prev = self.turn
         self.turn = PROPORTIONAL_COEFF * self.offset \
-                  + DERIVATIVE_COEFF * (self.offset - self.offset_prev)
+                  + derivative_coeff * (self.offset - self.offset_prev)
+        self.turn /= float(PROPORTIONAL_COEFF + derivative_coeff * 2)
         self.turn *= self.direction
-        self.turn /= float(PROPORTIONAL_COEFF + DERIVATIVE_COEFF * 2)
-        unit.turn(self.turn)
+        self.turn *= 2 # max turn value
 
     def run(self, unit):
-        """Run the follow tape mode.
+        """Run an iteration of the follow tape mode.
 
         Description:
-            Should be run from a while loop. Executes all 
+            Should be run from a loop. Executes all 
             methods needed to follow the tape. Variables
             accross iterations are stored in the object.
         """
         self.update_reflection(unit)
-        self.calculate_offset()
-        self.adjust_speed(unit)
-        #self.adjust_direction()
-        self.adjust_turn(unit)
-        
-        print(unit.speed)
+        if self.refl_interval > 10:
+            self.calculate_offset()
+            self.adjust_speed(unit)
+            self.adjust_direction()
+            self.adjust_turn(unit)
 
+        unit.turn(self.turn)
+        
         return self
 
 if __name__ == '__main__':
@@ -109,4 +104,3 @@ if __name__ == '__main__':
 
     while True:
         follow_tape_mode.run(unit)
-
