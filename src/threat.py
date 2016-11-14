@@ -6,7 +6,6 @@ import surrender
 
 class ThreatMode():
 
-
     def __init__(self):
         self.distance = 50
         
