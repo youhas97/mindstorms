@@ -9,8 +9,8 @@ class Unit(Ev3):
         left_motor = 'D'
         right_motor = 'A'
         gun = 'B'
-        ir_sensor = 2
-        color_sensor = 3
+        ir_sensor = 1
+        color_sensor = 4
 
         self.wheels = [left_motor, right_motor]
         self.left = self.add_motor(self.wheels[0])
