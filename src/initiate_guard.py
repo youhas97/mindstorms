@@ -1,21 +1,24 @@
 from unit import Unit
 from time import sleep
 
-def main():
-    unit = Unit('192.168.43.11')
+def check_activation(unit):
     channel = 1
     FOV = 90
     RANGE = 20
-    while True:
-        prox = unit.prox()
-        angle, distance = unit.seek(channel)
-        print(angle, distance, prox)
-        unit.forward(prox)
-        #if prox < 20:
-        #    unit.rotate(100, 180)
-        #    sleep(3)
-        if 0 <= distance < RANGE and abs(angle) < FOV/2:
-            print('activate')
-
+    angle, distance = unit.seek(channel)
+    print(angle, distance)
+    return distance != -128
+    
 if __name__ == '__main__':
-    main()
+    unit = Unit('192.168.0.112')
+    while True:
+        if check_activation(unit):
+            unit.speak('hello this is dog')
+            sleep(2.5)
+            unit.rotate_forever(100)
+            sleep(0.05)
+            unit.rotate_forever(-100)
+            sleep(0.1)
+            unit.rotate_forever(100)
+            sleep(0.05)
+            unit.stop()

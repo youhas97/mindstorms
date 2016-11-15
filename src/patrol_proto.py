@@ -5,38 +5,48 @@ import threat
 
 class Patrol():
     
-    def __init__(self, speed=50):
+    def __init__(self, speed=50, mode='peaceful'):
         self.speed = speed
         self.distance = 40
+        self.mode = mode
         
     def set_speed(speed):
         self.speed = speed
     
-    
-    def run(self, unit):
+    def change_direction(self, unit):
         direction = choice([-1,1])
+        unit.forward(-self.speed)
+        sleep(0.8)
+        unit.stop()
+        unit.rotate(100, direction*randint(90,180))
+        sleep(2)
+            
+    def run(self, unit):
         prox = unit.ir_sensor.get_prox()
-        reflection = unit.color_sensor.get_reflect()
-        color = unit.color_sensor.get_color()
-        if prox >= self.distance and reflection >= 7:
+        #reflection = unit.color_sensor.get_reflect()
+        reflection = 1000
+        color = unit.color()
+        #color = 10
+        print(prox, reflection, color)
+        if prox >= self.distance and color=='brown':
             unit.forward(self.speed)
-        elif reflection <=6 or color==0:
-            unit.stop()
-            #if prox <= self.distance * 1.25:
-             #   unit.speak('piss off cunt')
-            #    sleep(1.7)
-            unit.forward(-self.speed)
-            sleep(0.8)
-            unit.stop()
-            unit.rotate(100,direction*randint(90,180))
-            sleep(2)
+        elif reflection <=10 or color!='brown':
+            self.change_direction(unit)
         elif prox <= self.distance *1.25:
-            return threat.ThreatMode()
+            if self.mode == 'peaceful':
+                unit.stop()
+                unit.speak('oh sorry')
+                sleep(2)
+                self.change_direction(unit)
+            elif self.mode == 'guard':
+                return threat.ThreatMode()
         return self
 
 if __name__ == '__main__':
     unit = Unit('192.168.0.112')
-    patrol_mode = Patrol(speed=100)
-  
+    mode = Patrol(speed=100)
+    while True:
+        mode = mode.run(unit)
+   
         
             

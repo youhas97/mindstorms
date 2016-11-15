@@ -33,6 +33,13 @@ class Unit(Ev3):
         self.left.run_forever(-self.speed, run=False)
         self.right.run_forever(-self.speed, run=False)
         self.start_motors(self.wheels)
+    
+    def rotate_forever(self, speed):
+        """Make the unit rotate."""
+        self.set_speed(speed)
+        self.left.run_forever(-self.speed, run=False)
+        self.right.run_forever(self.speed, run=False)
+        self.start_motors(self.wheels)
 
     def turn(self, direction):
         """Turn unit while moving.

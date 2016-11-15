@@ -5,7 +5,9 @@ from follow_tape import FollowTape
 import idle
 
 class Surrender(FollowTape):
-
+    def __init__(self, unit):
+        super().__init__(unit)
+    
     def __init__(self, unit):
         super().__init__(unit)
         unit.speak('I surrender')
@@ -13,9 +15,6 @@ class Surrender(FollowTape):
         unit.rotate(100,150)
         sleep(2.3)
         unit.forward(80)
-        
-    def run(self, unit):
-        self.mode = self.mode(unit)
 
     def in_corner(self, unit):
         return 18 <= self.refl <= 22 and unit.color() == 'red'
