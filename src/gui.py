@@ -1,10 +1,11 @@
 import tkinter as tk
-from unit import Unit
-    
+from thread import GuardDog
 
 class App():
     def __init__(self, master):
+        self.gd = GuardDog()
         self.master = master
+
         container= tk.Frame(master, width=300, height=300)
         container.pack(side='top', fill='both', expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -23,11 +24,6 @@ class App():
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
-       
-
-    def connect(adress):
-        self.unit = Unit(adress)
-
 
 class Start(tk.Frame):
     def __init__(self, parent, controller):
@@ -36,7 +32,7 @@ class Start(tk.Frame):
         ip_entry = tk.Entry(self)
         ip_entry.grid(row=0, column=2)
         connect_button = tk.Button(self, text='connect',
-                                   command=lambda: App.connect(ip_entry.get()))
+                                   command=lambda: controller.gd.connect(ip_entry.get()))
         connect_button.grid(row=1, column=2)
         live_button = tk.Button(self, text='Live state', fg='green', 
                          command=lambda: controller.show_frame('Live'))
@@ -63,7 +59,7 @@ class Build(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         back_button = tk.Button(self, text='Go back', fg='red',
-                              command=lambda: controller.show_frame('Start'))
+                                command=lambda: controller.show_frame('Start'))
         back_button.grid(row=0, column=1)
 
 
@@ -71,4 +67,3 @@ if (__name__ == '__main__'):
     root = tk.Tk()
     app = App(root)
     root.mainloop()
-
