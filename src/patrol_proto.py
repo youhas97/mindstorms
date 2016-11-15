@@ -20,8 +20,35 @@ class Patrol():
         unit.stop()
         unit.rotate(100, direction*randint(90,180))
         sleep(2)
+
+    def check_activation(unit):
+        channel = 1
+        angle, distance = unit.seek(channel)
+        print(angle, distance)
+        return distance != -128
+        
+    def activation_dance(unit):
+        unit.stop()
+        unit.speak('choke me daddy')
+        sleep(2.5)
+        unit.rotate_forever(100)
+        sleep(0.15)
+        unit.rotate_forever(-100)
+        sleep(0.6)
+        unit.rotate_forever(100)
+        sleep(3)
+        unit.rotate_forever(-100)
+        sleep(0.15)
+        unit.stop()
             
     def run(self, unit):
+        if self.check_activation(unit):
+            self.activation_dance(unit)
+            if self.mode == 'guard':
+                self.mode = 'peaceful'
+            else:
+                self.mode = 'guard'
+            unit.speak('{} mode activated'.format(self.mode))
         prox = unit.ir_sensor.get_prox()
         #reflection = unit.color_sensor.get_reflect()
         reflection = 1000
