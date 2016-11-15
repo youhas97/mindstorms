@@ -1,4 +1,5 @@
 from api.ev3 import Ev3
+from follow_tape import FollowTape
 from time import sleep, time
 
 class Unit(Ev3):
@@ -9,8 +10,8 @@ class Unit(Ev3):
         left_motor = 'D'
         right_motor = 'A'
         gun = 'B'
-        ir_sensor = 2
-        color_sensor = 3
+        ir_sensor = 1
+        color_sensor = 4
 
         self.wheels = [left_motor, right_motor]
         self.left = self.add_motor(self.wheels[0])
@@ -65,7 +66,7 @@ class Unit(Ev3):
         """
 
         if -1 <= direction <= 1:
-            # does not work if speed is negative 
+            # TODO does not work if speed is negative, fix
             speed_ratio = 1 - abs(direction)
             max_vel = 2 / (speed_ratio + 1) * self.speed
             if max_vel > 100: max_vel = 100
@@ -79,9 +80,6 @@ class Unit(Ev3):
         if direction > 0: left_vel, right_vel = max_vel, min_vel
         else:             left_vel, right_vel = min_vel, max_vel
        
-        print(self.speed)
-        print(direction)
-        print(left_vel, right_vel)
         self.left.run_forever(-round(left_vel))
         self.right.run_forever(-round(right_vel))
 
