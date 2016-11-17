@@ -12,6 +12,11 @@ class GuardDog(Thread):
         self.unit = None
         self.log = logging.getLogger('dog')
         self.log.setLevel(logging.INFO)
+        console = logging.StreamHandler()
+        console.setLevel(logging.NOTSET)
+        formatter = logging.Formatter('%(levelname)s - %(name)s: %(message)s')
+        console.setFormatter(formatter)
+        self.log.addHandler(console)
 
     def run(self):
         self.mode = idle.IdleMode(self.unit)
