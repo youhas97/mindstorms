@@ -1,9 +1,22 @@
+Progress report 4:
+    
+    Group summary:
+    We completed milestone 4 and 8 and we are currently working on milestone 9. Milestone 8 is making the robot surrender and hide in the corner, milestone 9 is switching between guardmode and peacefulmode using the ir remote, and milestone 4 is making the robot react to the remote "switching modes". There has been progress reguarding following the tape, it follows the tape most of the times but we need more precise movements. We have also created a class to make the robot follow the remote if it ever will come in handy.
+
+
 Noah:
 I have spent 10h on lab sessions and about an hour at home, totalling in 11h. My tim has been spent on:
 -working on the surrender behaviour
 -working on the follow tape class
 -created a class that inherited FollowTape but followed the remote instead
--created a working thread class that handles the unit while the main thread handles the gui
+-created a working thread class that handles the unit while the main thread handles the gu
+
+Yohan
+I have spent 10h on lab sessions , about 8 hours of the time was spent doing work related to the project. Time has been spent on:
+- Assisting noah and the team by giving some ideas on how to switch modes using the remote
+- Since we are using our follow tape class in our surrender class i've come with ideas on how to actually make the robot stop at corners and not just follow the tape.
+- Contributed with ideas and some code to make it react and then dance when you push a button on the remote.
+
 
 Yousef:
 I have spent 10h on lab sessions, about 8 hours of the lab time was spent doing work directly related to the project,
