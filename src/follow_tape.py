@@ -9,14 +9,19 @@ class FollowTape():
     """
 
     def __init__(self, unit):
+        self.hist_len = 5
+
         self.offset = 0
         self.offset_prev = 0
+        self.offset_hist = [0 for _ in range(self.hist_len)]
 
         self.refl = unit.reflect()
         self.refl_prev = self.refl
         self.refl_min = self.refl
         self.refl_max = self.refl
         self.refl_interval = 0
+
+        self.min_speed = 25
 
         self.turn = 0
         self.turn_prev = 0
@@ -32,7 +37,6 @@ class FollowTape():
         self.refl_min = min(self.refl_min, self.refl)
         self.refl_max = max(self.refl_max, self.refl)
         self.refl_interval = self.refl_max - self.refl_min
-
 
     def calculate_offset(self):
         """Calculate offset value to edge of tape.
@@ -50,6 +54,8 @@ class FollowTape():
             self.offset = (self.refl-pivot) / (self.refl_interval/2)
         else:
             self.offset = 0
+        self.offset_hist.append(self.offset)
+        self.offset_hist.pop(0)
 
     def adjust_speed(self, unit):
         """Control speed of unit.
@@ -58,12 +64,14 @@ class FollowTape():
             Increases speed if reflection has low variation.
             Decreases speed if reflection has high variation.
         """
+        #if abs(self.offset) < 0.3:
+        #    unit.set_speed(unit.speed+1)
         if abs(self.refl - self.refl_prev) < 2:
             unit.set_speed(unit.speed+1)
         else:
-            unit.set_speed(unit.speed-abs(self.refl-self.refl_prev))
-            if unit.speed < 0:
-                unit.set_speed(0)
+            unit.set_speed(unit.speed-1)
+            if unit.speed < self.min_speed:
+                unit.set_speed(self.min_speed)
 
     def adjust_direction(self):
         """Control direction multiplier."""
@@ -72,12 +80,17 @@ class FollowTape():
     def adjust_turn(self, unit):
         """Control turn value for unit."""
         PROPORTIONAL_COEFF = 1
-        derivative_coeff = 0.25
+        integral_coeff = 0.5
+        derivative_coeff = 0.75
+
+        print(self.offset_hist)
 
         self.turn_prev = self.turn
         self.turn = PROPORTIONAL_COEFF * self.offset \
+                  + integral_coeff * (sum(self.offset_hist) / self.hist_len) \
                   + derivative_coeff * (self.offset - self.offset_prev)
-        self.turn /= float(PROPORTIONAL_COEFF + derivative_coeff * 2)
+
+        self.turn /= float(PROPORTIONAL_COEFF + integral_coeff + derivative_coeff * 2)
         self.turn *= self.direction
         self.turn *= 2 # max turn value
 
@@ -90,6 +103,7 @@ class FollowTape():
             accross iterations are stored in the object.
         """
         self.update_reflection(unit)
+        print(self.refl)
         if self.refl_interval > 10:
             self.calculate_offset()
             self.adjust_speed(unit)
