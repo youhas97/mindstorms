@@ -1,0 +1,5 @@
+I have spent 10h on lab sessions and about an hour at home, totalling in 11h. My tim has been spent on:
+-working on the surrender behaviour
+-working on the follow tape class
+-created a class that inherited FollowTape but followed the remote instead
+-created a working thread class that handles the unit while the main thread handles the gu
