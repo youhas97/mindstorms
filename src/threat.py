@@ -37,7 +37,7 @@ class ThreatMode():
         print(prox)
         if self.detect_threat(unit):
             self.shoot(unit)
-            if unit.prox() <= distance:
+            if unit.prox() <= self.distance:
                 return surrender.Surrender()
         else:
             return patrol_proto.Patrol()

@@ -23,6 +23,8 @@ class FollowTape():
 
         self.direction = 1
 
+        unit.set_speed(20)
+
     def update_reflection(self, unit):
         """Parse reflection from unit and set min/max values."""
         self.refl_prev = self.refl

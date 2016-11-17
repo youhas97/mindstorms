@@ -1,5 +1,4 @@
 from api.ev3 import Ev3
-from follow_tape import FollowTape
 from time import sleep, time
 
 class Unit(Ev3):

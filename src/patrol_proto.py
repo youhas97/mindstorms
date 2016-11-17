@@ -21,15 +21,16 @@ class Patrol():
         unit.rotate(100, direction*randint(90,180))
         sleep(2)
 
-    def check_activation(unit):
+    def check_activation(self, unit):
         channel = 1
         angle, distance = unit.seek(channel)
         print(angle, distance)
         return distance != -128
         
-    def activation_dance(unit):
+    def activation_dance(self, unit):
         unit.stop()
-        unit.speak('choke me daddy')
+        """"
+        #unit.speak('choke me daddy')
         sleep(2.5)
         unit.rotate_forever(100)
         sleep(0.15)
@@ -40,24 +41,26 @@ class Patrol():
         unit.rotate_forever(-100)
         sleep(0.15)
         unit.stop()
-            
+        """
+        sleep(2)
+
+    def toggle_mode(self, unit):
+        self.activation_dance(unit)
+        if self.mode == 'guard':
+            self.mode = 'peaceful'
+        else:
+            self.mode = 'guard'
+        unit.speak('{} mode activated'.format(self.mode))
+
     def run(self, unit):
         if self.check_activation(unit):
-            self.activation_dance(unit)
-            if self.mode == 'guard':
-                self.mode = 'peaceful'
-            else:
-                self.mode = 'guard'
-            unit.speak('{} mode activated'.format(self.mode))
+            self.toggle_mode(unit)
         prox = unit.ir_sensor.get_prox()
-        #reflection = unit.color_sensor.get_reflect()
-        reflection = 1000
         color = unit.color()
         #color = 10
-        print(prox, reflection, color)
-        if prox >= self.distance and color=='brown':
-            unit.forward(self.speed)
-        elif reflection <=10 or color!='brown':
+        print(prox, color)
+        unit.forward(self.speed)
+        if color == 'black':
             self.change_direction(unit)
         elif prox <= self.distance *1.25:
             if self.mode == 'peaceful':
@@ -71,7 +74,7 @@ class Patrol():
 
 if __name__ == '__main__':
     unit = Unit('192.168.0.112')
-    mode = Patrol(speed=100)
+    mode = Patrol(speed=50)
     while True:
         mode = mode.run(unit)
    

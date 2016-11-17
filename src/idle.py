@@ -6,6 +6,6 @@ class IdleMode():
         unit.stop()
 
     def run(self, unit):
-        pass
+        return self
 
         
