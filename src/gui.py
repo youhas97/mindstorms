@@ -16,9 +16,9 @@ class App():
             page_name = Frame.__name__
             frame = Frame(parent=container, controller=self)
             self.frames[page_name] = frame
-            
+
             frame.grid(row=0, column=0, sticky='nsew')
-        
+
         self.show_frame('Start')
 
     def show_frame(self, page_name):
@@ -30,16 +30,16 @@ class Start(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         ip_entry = tk.Entry(self)
-        ip_entry.grid(row=0, column=2)
+        ip_entry.grid(sticky=tk.W+tk.E, row=3)
         connect_button = tk.Button(self, text='connect',
                                    command=lambda: controller.gd.connect(ip_entry.get()))
-        connect_button.grid(row=1, column=2)
-        live_button = tk.Button(self, text='Live state', fg='green', 
+        connect_button.grid(row=4)
+        live_button = tk.Button(self, text='Live state', fg='green',
                          command=lambda: controller.show_frame('Live'))
-        live_button.grid(row=0, column=1)
+        live_button.grid(sticky=tk.W+tk.E, row=2)
         build_button = tk.Button(self, text='Building state', fg='blue',
                           command=lambda: controller.show_frame('Build'))
-        build_button.grid(row=0, column=0)
+        build_button.grid(sticky=tk.W+tk.E, row=1)
 
 
 class Live(tk.Frame):
@@ -48,19 +48,19 @@ class Live(tk.Frame):
         self.controller = controller
         patrol_button = tk.Button(self, text='Patrol', fg='green',
                            command=lambda: print('WOOOOOHOOOOOO'))
-        patrol_button.grid(row=0, column=1)
+        patrol_button.grid(sticky=tk.W+tk.E, row=1)
         back_button = tk.Button(self, text='Go back', fg='red',
                          command=lambda: controller.show_frame('Start'))
-        back_button.grid(row=0, column=0)
+        back_button.grid(sticky=tk.W+tk.E, row=2)
 
-    
+
 class Build(tk.Frame):
      def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         back_button = tk.Button(self, text='Go back', fg='red',
                                 command=lambda: controller.show_frame('Start'))
-        back_button.grid(row=0, column=1)
+        back_button.grid(sticky=tk.W+tk.E, row=2)
 
 
 if (__name__ == '__main__'):
