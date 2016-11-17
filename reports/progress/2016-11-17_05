@@ -1,4 +1,4 @@
-Progress report 4:
+Progress report 5:
     
     Group summary:
     We completed milestone 4 and 8 and we are currently working on milestone 9. Milestone 8 is making the robot surrender and hide in the corner, milestone 9 is switching between guardmode and peacefulmode using the ir remote, and milestone 4 is making the robot react to the remote "switching modes". There has been progress reguarding following the tape, it follows the tape most of the times but we need more precise movements. We have also created a class to make the robot follow the remote if it ever will come in handy.
