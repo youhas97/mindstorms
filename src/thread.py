@@ -18,10 +18,18 @@ class GuardDog(Thread):
         console.setFormatter(formatter)
         self.log.addHandler(console)
 
+    def set_mode(self, Mode):
+        """Set mode."""
+        self.NewMode = Mode
+
     def run(self):
+        """Run an iteration of the unit's current mode."""
         self.mode = idle.IdleMode(self.unit)
         while True:
             self.mode = self.mode.run(self.unit)
+            if self.new_mode:
+                self.mode = self.NewMode(self.unit)
+                self.NewMode = None
 
     def connect(self, address):
         try:
