@@ -4,10 +4,14 @@ from random import randint, choice
 import threat
 
 class Patrol():
+    GUARD = 0
+    PEACEFUL = 1
+    MODE_NAMES = ['guard', 'peaceful']
+
+    DISTANCE_THRESHOLD = 40
     
-    def __init__(self, speed=50, mode='peaceful'):
+    def __init__(self, speed=50, mode=Patrol.PEACEFUL):
         self.speed = speed
-        self.distance = 40
         self.mode = mode
         
     def set_speed(speed):
@@ -25,7 +29,7 @@ class Patrol():
         channel = 1
         angle, distance = unit.seek(channel)
         print(angle, distance)
-        return distance != -128
+        return distance != None
         
     def activation_dance(self, unit):
         unit.stop()
@@ -46,29 +50,31 @@ class Patrol():
 
     def toggle_mode(self, unit):
         self.activation_dance(unit)
-        if self.mode == 'guard':
-            self.mode = 'peaceful'
-        else:
-            self.mode = 'guard'
-        unit.speak('{} mode activated'.format(self.mode))
+        self.mode == not self.mode
+        unit.speak('{} mode activated'.format(Patrol.MODE_NAMES[self.mode]))
+
+    def object_in_prox(self):
+        return self.prox < Patrol.DISTANCE_THRESHOLD
 
     def run(self, unit):
+        self.prox = unit.ir_sensor.get_prox()
+        unit.forward(self.speed)
+
         if self.check_activation(unit):
             self.toggle_mode(unit)
-        prox = unit.ir_sensor.get_prox()
+
         color = unit.color()
         #color = 10
         print(prox, color)
-        unit.forward(self.speed)
         if color == 'black':
             self.change_direction(unit)
-        elif prox <= self.distance *1.25:
-            if self.mode == 'peaceful':
+        elif self.object_in_prox():
+            if self.mode == Patrol.PEACEFUL:
                 unit.stop()
                 unit.speak('oh sorry')
                 sleep(2)
                 self.change_direction(unit)
-            elif self.mode == 'guard':
+            elif self.mode == Patrol.GUARD:
                 return threat.ThreatMode()
         return self
 
