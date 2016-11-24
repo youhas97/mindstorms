@@ -1,0 +1,21 @@
+Progress report 6:
+
+Group summary:
+We have rebuilt the mounts for the sensors. The IR sensor does no longer detect
+the floor within the 100 units. The color sensor is no longer too close or too far
+away from the ground. With a more stable mount for the color sensor the follow tape
+module is working more consistently. We have also added more functionality to our GUI.
+We are now able to switch modes using the GUI by calling methods of the thread handler.
+The GUI can function as usual while the unit runs (due to multithreading).
+
+
+Noah:
+I have spent 10h during lab sessions. My time has been spent on:
+-Remounting the IR and color sensor.
+-fixing the follow tape
+-continued work on the thread handler and GUI
+
+Yohan:
+
+
+Yousef:
