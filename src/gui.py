@@ -1,7 +1,9 @@
 import tkinter as tk
 from thread import GuardDog
+
 import follow_tape
 import idle
+import patrol
 
 class App():
     def __init__(self, master):

@@ -1,7 +1,7 @@
 from unit import Unit
 from time import sleep
 
-import patrol_proto
+import patrol
 import surrender
 
 class ThreatMode():
@@ -40,7 +40,7 @@ class ThreatMode():
             if unit.prox() <= self.distance:
                 return surrender.Surrender()
         else:
-            return patrol_proto.Patrol()
+            return patrol.Patrol()
         return self
 
 
