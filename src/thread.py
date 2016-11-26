@@ -31,7 +31,7 @@ class GuardDog(Thread):
 
     def get_speed(self):
         """Get the current speed of the unit."""
-        return self.unit.actual_speed
+        return self.unit.actual_speed()
 
     def run(self):
         """Run an iteration of the unit's current mode."""
