@@ -21,53 +21,61 @@ class App():
 
             frame.grid(row=0, column=0, sticky='nsew')
 
-        self.show_frame('Start')
+        self.show_frame(Start.__name__)
 
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
 
+    def create_buttons(frame, buttons, cols):
+        for index, button in enumerate(buttons):
+            row = index // cols
+            col = index % cols
+            tk_btn = tk.Button(frame,
+                               text=button[0],
+                               command=button[1])
+            tk_btn.grid(sticky=tk.W+tk.E, row=row, column=col)
+
+
 class Start(tk.Frame):
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         ip_entry = tk.Entry(self)
-        ip_entry.grid(sticky=tk.W+tk.E, row=3)
-        connect_btn = tk.Button(self, text='connect', fg='white',
-                            command=lambda: controller.gd.connect(ip_entry.get()))
-        connect_btn.grid(row=4)
-        live_btn = tk.Button(self, text='Live state', fg='white',
-                         command=lambda: controller.show_frame('Live'))
-        live_btn.grid(sticky=tk.W+tk.E, row=2)
-        build_btn = tk.Button(self, text='Building state', fg='white',
-                          command=lambda: controller.show_frame('Build'))
-        build_btn.grid(sticky=tk.W+tk.E, row=1)
+        ip_entry.grid(sticky=tk.W+tk.E, row=4)
+
+        buttons = [
+            ['Live state', lambda: controller.show_frame(Live.__name__)],
+            ['Building state', lambda: controller.show_frame(Build.__name__)],
+            ['connect', lambda: controller.gd.connect(ip_entry.get())],
+        ]
+        App.create_buttons(self, buttons, 1)
 
 
 class Live(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        patrol_btn = tk.Button(self, text='Patrol', fg='white',
-                           command=lambda: print('WOOOOOHOOOOOO'))
-        patrol_btn.grid(sticky=tk.W+tk.E, row=1)
-        back_btn = tk.Button(self, text='Go back', fg='white',
-                         command=lambda: controller.show_frame('Start'))
-        back_btn.grid(sticky=tk.W+tk.E, row=4)
-        follow_tape_btn = tk.Button(self, text='Follow Tape', fg='white',
-                command=lambda: controller.gd.set_mode(follow_tape.FollowTape))
-        follow_tape_btn.grid(sticky=tk.W+tk.E, row=2)
-        idle_btn = tk.Button(self, text='Idle', fg='white',
-                        command=lambda: controller.gd.set_mode(idle.IdleMode))
-        idle_btn.grid(sticky=tk.W+tk.E, row=3)
+
+        buttons = [
+            ['Patrol', lambda: controller.gd.set_mode(patrol.Patrol)],
+            ['Follow Tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
+            ['Idle', lambda: controller.gd.set_mode(idle.IdleMode)],
+            ['Go back', lambda: controller.show_frame(Start.__name__)],
+        ]
+        App.create_buttons(self, buttons, 1)
+
 
 class Build(tk.Frame):
      def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        back_btn = tk.Button(self, text='Go back', fg='white',
-                                command=lambda: controller.show_frame('Start'))
-        back_btn.grid(sticky=tk.W+tk.E, row=2)
+
+        buttons = [
+            ['Go back', lambda: controller.show_frame(Start.__name__)],
+        ]
+        App.create_buttons(self, buttons, 1)
 
 
 if (__name__ == '__main__'):
