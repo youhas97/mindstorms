@@ -1,4 +1,5 @@
 import tkinter as tk
+
 from thread import GuardDog
 
 import follow_tape
@@ -6,11 +7,13 @@ import idle
 import patrol
 
 class App():
+    """Root frame of GUI."""
+
     def __init__(self, master):
         self.gd = GuardDog()
         self.master = master
 
-        container= tk.Frame(master, width=300, height=300)
+        container= tk.Frame(master, width=300, height=500)
         container.pack(side='top', fill='both', expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
@@ -26,10 +29,17 @@ class App():
         self.show_frame(Start.__name__)
 
     def show_frame(self, page_name):
-        frame = self.frames[page_name]
-        frame.tkraise()
+        """Raise a frame to the top."""
+        self.frames[page_name].tkraise()
 
     def create_buttons(frame, buttons, cols):
+        """Create buttons in a grid pattern.
+
+        Parameters:
+            frame -- tk frame to place buttons inside.
+            buttons -- list of titles and commands for buttons.
+            cols -- the amount of colums in the grid.
+        """
         for index, button in enumerate(buttons):
             row = index // cols
             col = index % cols
