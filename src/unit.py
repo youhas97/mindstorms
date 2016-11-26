@@ -2,6 +2,8 @@ from api.ev3 import Ev3
 from time import sleep, time
 
 class Unit(Ev3):
+    """Handle unit."""
+
     def __init__(self, ip):
         super().__init__(ip)
         
@@ -44,8 +46,11 @@ class Unit(Ev3):
         """Turn unit while moving.
         
         Params:
-            direction -- float between -1 and 1 indicating
+            direction -- float between -2 and 2 indicating
                          turn radius and direction
+
+        Exceptions:
+            ValueError -- if direction is not within [-2,2] range.
         Examples:
             self.speed = 40, direction = 1:
             left_vel = 80, right_vel = 0 (unit turns right)
@@ -81,7 +86,7 @@ class Unit(Ev3):
             max_vel = self.speed
             min_vel = max_vel - abs(direction) * self.speed
         else:
-            print('unit: max turn direction exceeded -- {}'.format(direction))
+            raise ValueError('input outside range [-2,2] -- {}'.format(direction))
 
         if direction > 0: left_vel, right_vel = max_vel, min_vel
         else:             left_vel, right_vel = min_vel, max_vel
