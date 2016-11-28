@@ -10,7 +10,7 @@ class Patrol():
 
     DISTANCE_THRESHOLD = 40
     
-    def __init__(self, speed=50, mode=Patrol.PEACEFUL):
+    def __init__(self, speed=50, mode='peaceful'):
         self.speed = speed
         self.mode = mode
         
@@ -29,7 +29,7 @@ class Patrol():
         channel = 1
         angle, distance = unit.seek(channel)
         print(angle, distance)
-        return distance != None
+        return distance != -128
         
     def activation_dance(self, unit):
         unit.stop()
@@ -49,24 +49,23 @@ class Patrol():
         sleep(2)
 
     def toggle_mode(self, unit):
-        self.activation_dance(unit)
-        self.mode == not self.mode
+        self.mode = not self.mode
         unit.speak('{} mode activated'.format(Patrol.MODE_NAMES[self.mode]))
+        self.activation_dance(unit)
 
     def object_in_prox(self):
         return self.prox < Patrol.DISTANCE_THRESHOLD
 
     def run(self, unit):
         self.prox = unit.ir_sensor.get_prox()
+        self.refl= unit.reflect()
         unit.forward(self.speed)
 
         if self.check_activation(unit):
             self.toggle_mode(unit)
 
-        color = unit.color()
-        #color = 10
-        print(prox, color)
-        if color == 'black':
+        print(self.prox, self.refl)
+        if self.refl < 10:
             self.change_direction(unit)
         elif self.object_in_prox():
             if self.mode == Patrol.PEACEFUL:

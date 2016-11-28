@@ -2,6 +2,8 @@ from api.ev3 import Ev3
 from time import sleep, time
 
 class Unit(Ev3):
+    """Handle unit."""
+
     def __init__(self, ip):
         super().__init__(ip)
         
@@ -9,7 +11,7 @@ class Unit(Ev3):
         left_motor = 'D'
         right_motor = 'A'
         gun = 'B'
-        ir_sensor = 1
+        ir_sensor = 2
         color_sensor = 4
 
         self.wheels = [left_motor, right_motor]
@@ -44,50 +46,54 @@ class Unit(Ev3):
         """Turn unit while moving.
         
         Params:
-            direction -- float between -1 and 1 indicating
+            direction -- float between -2 and 2 indicating
                          turn radius and direction
+
+        Exceptions:
+            ValueError -- if direction is not within [-2,2] range.
+
         Examples:
             self.speed = 40, direction = 1:
-            left_vel = 80, right_vel = 0 (unit turns right)
+            left_speed = 80, right_speed = 0 (unit turns right)
 
             self.speed = 60, direction = -0.5:
-            left_vel = 40, right_vel = 80 (unit turns left)
+            left_speed = 40, right_speed = 80 (unit turns left)
 
             self.speed = 90, direction = 0.75:
-            left_vel = 100, right_vel = 25
+            left_speed = 100, right_speed = 25
 
         Derivation:
             speed_ratio/direction decides the ratio of speed
             between the two wheels, therefore deciding the 
             turn radius:
-                min_vel / max_vel = speed_ratio
-                    --> min_vel = max_vel * speed_ratio
+                min_speed / max_speed = speed_ratio
+                    --> min_speed = max_speed * speed_ratio
 
             In order to not slow down the unit during turning, 
             the average speed of the wheels should be the 
             current speed of the unit (as long as it doesnt
             exceed motors' the speed limit):
-                ( max_vel + min_vel ) / 2 = self.speed
-                    --> max_vel = 2 * speed_ratio / self.speed
+                ( max_speed + min_speed ) / 2 = self.speed
+                    --> max_speed = 2 * speed_ratio / self.speed
         """
 
         if -1 <= direction <= 1:
             # TODO does not work if speed is negative, fix
             speed_ratio = 1 - abs(direction)
-            max_vel = 2 / (speed_ratio + 1) * self.speed
-            if max_vel > 100: max_vel = 100
-            min_vel = max_vel * speed_ratio
+            max_speed = 2 / (speed_ratio + 1) * self.speed
+            if max_speed > 100: max_speed = 100
+            min_speed = max_speed * speed_ratio
         elif -2 <= direction <= 2:
-            max_vel = self.speed
-            min_vel = max_vel - abs(direction) * self.speed
+            max_speed = self.speed
+            min_speed = max_speed - abs(direction) * self.speed
         else:
-            print('unit: max turn direction exceeded -- {}'.format(direction))
+            raise ValueError('input outside range [-2,2] -- {}'.format(direction))
 
-        if direction > 0: left_vel, right_vel = max_vel, min_vel
-        else:             left_vel, right_vel = min_vel, max_vel
+        if direction > 0: left_speed, right_speed = max_speed, min_speed
+        else:             left_speed, right_speed = min_speed, max_speed
        
-        self.left.run_forever(-round(left_vel))
-        self.right.run_forever(-round(right_vel))
+        self.left.run_forever(-round(left_speed))
+        self.right.run_forever(-round(right_speed))
 
     def stop(self):
         """Stop the unit."""
@@ -97,15 +103,16 @@ class Unit(Ev3):
     def rotate(self, speed, degrees):
         """Rotate the unit."""
         self.speed = 0
-        conversion = 5.3
-        rotation = int(conversion*degrees)
+        ANGLE_DEGREE = 5.3
+        rotation = int(ANGLE_DEGREE*degrees)
         self.right.run_position_limited(speed, rotation, run=False)
         self.left.run_position_limited(speed, -rotation, run=False)
         self.start_motors(self.wheels)
 
     def shoot(self, shots=1):
         """Fires amount of shots you want"""
-        self.gun.run_time_limited(100, 1190*shots)
+        ANGLE_BULLET = 1190
+        self.gun.run_time_limited(100, ANGLE_BULLET*shots)
 
     def seek(self, channel):
         """Parse seek values from IR sensor """
@@ -125,6 +132,11 @@ class Unit(Ev3):
     def reflect(self):
         """Parse reflection value from color sensor"""
         return self.color_sensor.get_reflect()
+
+    def actual_speed(self):
+        left = self.left.get_attribute('speed')
+        right = self.right.get_attribute('speed')
+        return (left+right)/2
 
     def check_movement(self, time_interval, distance_margin):
         """Check for movement with proximity sensors.
