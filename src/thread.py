@@ -16,7 +16,7 @@ class GuardDog(Thread):
 
     def __init__(self):
         Thread.__init__(self)
-        self.unit = None
+
         self.log = logging.getLogger('dog')
         self.log.setLevel(logging.INFO)
         console = logging.StreamHandler()
@@ -24,6 +24,10 @@ class GuardDog(Thread):
         formatter = logging.Formatter('%(levelname)s - %(name)s: %(message)s')
         console.setFormatter(formatter)
         self.log.addHandler(console)
+
+        self.unit = None
+        self.newMode = None
+
 
     def set_mode(self, Mode):
         """Set mode."""
@@ -38,7 +42,7 @@ class GuardDog(Thread):
         self.mode = idle.IdleMode(self.unit)
         while True:
             self.mode = self.mode.run(self.unit)
-            if self.new_mode:
+            if self.NewMode:
                 self.mode = self.NewMode(self.unit)
                 self.NewMode = None
 
