@@ -8,7 +8,7 @@ class App():
         self.gd = GuardDog()
         self.master = master
 
-        container= tk.Frame(master, width=300, height=300)
+        container= tk.Frame(master, width=500, height=300)
         container.pack(side='top', fill='both', expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
@@ -18,7 +18,6 @@ class App():
             page_name = Frame.__name__
             frame = Frame(parent=container, controller=self)
             self.frames[page_name] = frame
-
             frame.grid(row=0, column=0, sticky='nsew')
 
         self.show_frame('Start')
@@ -32,16 +31,17 @@ class Start(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         ip_entry = tk.Entry(self)
-        ip_entry.grid(sticky=tk.W+tk.E, row=3)
+        ip_entry.place(relx=.05 , rely=.9)
         connect_btn = tk.Button(self, text='connect', fg='white',
-                            command=lambda: controller.gd.connect(ip_entry.get()))
-        connect_btn.grid(row=4)
+                                command=lambda: controller.gd.connect(ip_entry.get()))
+        connect_btn.place(relx=.05 , rely=.8)
         live_btn = tk.Button(self, text='Live state', fg='white',
-                         command=lambda: controller.show_frame('Live'))
-        live_btn.grid(sticky=tk.W+tk.E, row=2)
+                             command=lambda: controller.show_frame('Live'),width=20)
+        live_btn.place(relx=.05, rely=.05)
         build_btn = tk.Button(self, text='Building state', fg='white',
-                          command=lambda: controller.show_frame('Build'))
-        build_btn.grid(sticky=tk.W+tk.E, row=1)
+                              command=lambda: controller.show_frame('Build'),width=20)
+        build_btn.place(relx=.05, rely=.15)
+        
 
 
 class Live(tk.Frame):
@@ -60,6 +60,7 @@ class Live(tk.Frame):
         idle_btn = tk.Button(self, text='Idle', fg='white',
                         command=lambda: controller.gd.set_mode(idle.IdleMode))
         idle_btn.grid(sticky=tk.W+tk.E, row=3)
+        
 
 class Build(tk.Frame):
      def __init__(self, parent, controller):
@@ -68,10 +69,12 @@ class Build(tk.Frame):
         back_btn = tk.Button(self, text='Go back', fg='white',
                                 command=lambda: controller.show_frame('Start'))
         back_btn.grid(sticky=tk.W+tk.E, row=2)
+        
 
 
 if (__name__ == '__main__'):
     root = tk.Tk()
+    root.geometry('500x300+350+70')
     app = App(root)
     root.mainloop()
     app.gd.kill()
