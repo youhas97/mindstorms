@@ -2,7 +2,7 @@
 from ev3 import Ev3
 import time
 #Replace with your ip
-test_unit=Ev3("192.168.1.108")
+test_unit=Ev3("169.254.72.80")
 left=test_unit.add_motor("B")
 right=test_unit.add_motor("C")
 
