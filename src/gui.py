@@ -1,5 +1,5 @@
 import tkinter as tk
-
+from unit import *
 from thread import GuardDog
 
 import follow_tape
@@ -65,15 +65,17 @@ class Start(tk.Frame):
         build_btn = tk.Button(self, text='Building state', fg='white',
                               command=lambda: controller.show_frame('Build'),width=20)
         build_btn.place(relx=.05, rely=.15)
-        
-        ip_entry.grid(sticky=tk.W+tk.E, row=4)
+        test = tk.Label(self, text=controller.gd.actual_speed)
+        test.pack()
+        test.place(relx=.7,rely=.125)
+       # ip_entry.grid(sticky=tk.W+tk.E, row=4)
 
-        buttons = [
+        """buttons = [
             ['Live state', lambda: controller.show_frame(Live.__name__)],
             ['Building state', lambda: controller.show_frame(Build.__name__)],
             ['connect', lambda: controller.gd.connect(ip_entry.get())],
         ]
-        App.create_buttons(self, buttons)
+        App.create_buttons(self, buttons)"""
 
 
 class Live(tk.Frame):
@@ -94,13 +96,13 @@ class Live(tk.Frame):
         idle_btn.grid(sticky=tk.W+tk.E, row=3)
         
 
-        buttons = [
+        """buttons = [
             ['Patrol', lambda: controller.gd.set_mode(patrol.Patrol)],
             ['Follow tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
             ['Follow me', lambda: controller.gd.set_mode(lazyaf.GetOverHere())],
             ['Idle', lambda: controller.gd.set_mode(idle.IdleMode)],
         ]
-        App.create_buttons(self, buttons, 2)
+        App.create_buttons(self, buttons, 2)"""
 
         speak_entry = tk.Entry(self)
         speak_entry.grid(sticky=tk.W+tk.E, row=3)
@@ -124,10 +126,10 @@ class Build(tk.Frame):
         back_btn.grid(sticky=tk.W+tk.E, row=2)
         
 
-        buttons = [
+        """buttons = [
             ['Go back', lambda: controller.show_frame(Start.__name__)],
         ]
-        App.create_buttons(self, buttons)
+        App.create_buttons(self, buttons)"""
 
 
 if (__name__ == '__main__'):
