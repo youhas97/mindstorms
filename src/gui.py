@@ -32,7 +32,7 @@ class App():
         """Raise a frame to the top."""
         self.frames[page_name].tkraise()
 
-    def create_buttons(frame, buttons, cols):
+    def create_buttons(frame, buttons, cols=1):
         """Create buttons in a grid pattern.
 
         Parameters:
@@ -62,7 +62,7 @@ class Start(tk.Frame):
             ['Building state', lambda: controller.show_frame(Build.__name__)],
             ['connect', lambda: controller.gd.connect(ip_entry.get())],
         ]
-        App.create_buttons(self, buttons, 1)
+        App.create_buttons(self, buttons)
 
 
 class Live(tk.Frame):
@@ -72,11 +72,23 @@ class Live(tk.Frame):
 
         buttons = [
             ['Patrol', lambda: controller.gd.set_mode(patrol.Patrol)],
-            ['Follow Tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
+            ['Follow tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
+            ['Follow me', lambda: controller.gd.set_mode(lazyaf.GetOverHere())],
             ['Idle', lambda: controller.gd.set_mode(idle.IdleMode)],
-            ['Go back', lambda: controller.show_frame(Start.__name__)],
         ]
-        App.create_buttons(self, buttons, 1)
+        App.create_buttons(self, buttons, 2)
+
+        speak_entry = tk.Entry(self)
+        speak_entry.grid(sticky=tk.W+tk.E, row=3)
+        speak_button = tk.Button(self,
+            text='Speak', 
+            command=lambda: controller.gd.unit.speak(speak_entry.get()))
+        speak_button.grid(sticky=tk.W+tk.E, column=1, row=3)
+
+        go_back_btn = tk.Button(self,
+            text='Go back',
+            command=lambda: controller.show_frame(Start.__name__))
+        go_back_btn.grid(sticky=tk.W+tk.E, row=4)
 
 
 class Build(tk.Frame):
@@ -87,7 +99,7 @@ class Build(tk.Frame):
         buttons = [
             ['Go back', lambda: controller.show_frame(Start.__name__)],
         ]
-        App.create_buttons(self, buttons, 1)
+        App.create_buttons(self, buttons)
 
 
 if (__name__ == '__main__'):
