@@ -1,5 +1,6 @@
 import logging
 from threading import Thread
+import tkinter as tk
 
 from unit import Unit
 
@@ -27,6 +28,7 @@ class GuardDog(Thread):
 
         self.unit = None
         self.newMode = None
+        self.actual_speed = tk.StringVar()
 
 
     def set_mode(self, Mode):
@@ -46,6 +48,8 @@ class GuardDog(Thread):
                 self.mode = self.NewMode(self.unit)
                 self.NewMode = None
 
+            self.actual_speed.set(str(unit.actual_speed()))
+
     def connect(self, address):
         """Connect to unit and create object."""
         try:
@@ -57,3 +61,5 @@ class GuardDog(Thread):
             self.log.error('failed to connect -- \'{}\''.format(address))
             self.log.error(err)
             return False
+
+
