@@ -1,4 +1,5 @@
 import logging
+from time import time
 from threading import Thread
 import tkinter as tk
 
@@ -28,7 +29,12 @@ class GuardDog(Thread):
 
         self.unit = None
         self.NewMode = None
-        self.actual_speed = tk.StringVar()
+
+        self.actual_speed = 0
+        self.distance = 0
+
+        self.actual_speed_str = tk.StringVar()
+        self.distance_str = tk.StringVar()
 
     def set_mode(self, Mode):
         """Set mode."""
@@ -37,13 +43,23 @@ class GuardDog(Thread):
     def run(self):
         """Run an iteration of the unit's current mode."""
         self.mode = idle.IdleMode(self.unit)
+        time_prev = time_now = time()
+
         while True:
+            time_prev = time_now
+            time_now = time()
+            time_delta = time_now - time_prev
+
             self.mode = self.mode.run(self.unit)
             if self.NewMode:
                 self.mode = self.NewMode(self.unit)
                 self.NewMode = None
 
-            self.actual_speed.set(str(self.unit.actual_speed())+' m/s')
+            self.actual_speed = (self.unit.actual_speed())
+            self.distance = (self.distance+self.actual_speed*time_delta)
+
+            self.actual_speed_str.set('{} m/s'.format(round(self.actual_speed, 2)))
+            self.distance_str.set('{} m'.format(round(self.distance, 2)))
 
     def connect(self, address):
         """Connect to unit and create object."""
