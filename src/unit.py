@@ -136,7 +136,7 @@ class Unit(Ev3):
     def actual_speed(self):
         left = self.left.get_attribute('speed')
         right = self.right.get_attribute('speed')
-        return (left+right)/2
+        return -(left+right)/2
 
     def check_movement(self, time_interval, distance_margin):
         """Check for movement with proximity sensors.
