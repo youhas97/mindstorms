@@ -65,6 +65,7 @@ class Start(tk.Frame):
         build_btn = tk.Button(self, text='Building state', fg='white',
                               command=lambda: controller.show_frame('Build'),width=20)
         build_btn.place(relx=.05, rely=.15)
+
         test = tk.Label(self, text=controller.gd.actual_speed)
         test.pack()
         test.place(relx=.7,rely=.125)
