@@ -87,7 +87,8 @@ class Data(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        self.create_data_field('Speed', controller.gd.actual_speed, (0,2))
+        self.create_data_field('Speed', controller.gd.actual_speed_str, (0,2))
+        self.create_data_field('Distance', controller.gd.distance_str, (1,2))
 
     def create_data_field(self, title, variable, pos):
         title_lbl = tk.Label(self, text=title)
@@ -104,39 +105,17 @@ class Live(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        patrol_btn = tk.Button(self, text='Patrol', fg='white',
-                           command=lambda: print('WOOOOOHOOOOOO'))
-        patrol_btn.grid(sticky=tk.W+tk.E, row=1)
-        back_btn = tk.Button(self, text='Go back', fg='white',
-                         command=lambda: controller.show_frame('Start'))
-        back_btn.grid(sticky=tk.W+tk.E, row=4)
-        follow_tape_btn = tk.Button(self, text='Follow Tape', fg='white',
-                command=lambda: controller.gd.set_mode(follow_tape.FollowTape))
-        follow_tape_btn.grid(sticky=tk.W+tk.E, row=2)
-        idle_btn = tk.Button(self, text='Idle', fg='white',
-                        command=lambda: controller.gd.set_mode(idle.IdleMode))
-        idle_btn.grid(sticky=tk.W+tk.E, row=3)
-        
 
-        """buttons = [
-            ['Patrol', lambda: controller.gd.set_mode(patrol.Patrol)],
-            ['Follow tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
-            ['Follow me', lambda: controller.gd.set_mode(lazyaf.GetOverHere())],
-            ['Idle', lambda: controller.gd.set_mode(idle.IdleMode)],
+        buttons =[
+            ['Forward', lambda: print('forward')],
+            ['Back', lambda: print('back')],
+            ['Left', lambda: print('left')],
+            ['Right', lambda: print('right')],
         ]
-        App.create_buttons(self, buttons, 2)"""
+        App.create_buttons(self, buttons, 2)
+                
 
-        speak_entry = tk.Entry(self)
-        speak_entry.grid(sticky=tk.W+tk.E, row=3)
-        speak_button = tk.Button(self,
-            text='Speak', 
-            command=lambda: controller.gd.unit.speak(speak_entry.get()))
-        speak_button.grid(sticky=tk.W+tk.E, column=1, row=3)
 
-        go_back_btn = tk.Button(self,
-            text='Go back',
-            command=lambda: controller.show_frame(Start.__name__))
-        go_back_btn.grid(sticky=tk.W+tk.E, row=4)
 
 
 class Build(tk.Frame):
@@ -159,4 +138,3 @@ if (__name__ == '__main__'):
     root.geometry('500x300+350+70')
     app = App(root)
     root.mainloop()
-    app.gd.kill()
