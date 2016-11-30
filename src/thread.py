@@ -60,7 +60,7 @@ class GuardDog(Thread):
 
             self.actual_speed_str.set('{} m/s'.format(round(self.actual_speed, 2)))
             self.distance_str.set('{} m'.format(round(self.distance, 2)))
-
+    
     def connect(self, address):
         """Connect to unit and create object."""
         try:
