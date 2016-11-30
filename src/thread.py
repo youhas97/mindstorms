@@ -48,7 +48,7 @@ class GuardDog(Thread):
                 self.mode = self.NewMode(self.unit)
                 self.NewMode = None
 
-            self.actual_speed.set(str(unit.actual_speed()))
+            self.actual_speed.set(str(self.unit.actual_speed()))
 
     def connect(self, address):
         """Connect to unit and create object."""
