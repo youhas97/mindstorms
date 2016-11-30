@@ -134,9 +134,13 @@ class Unit(Ev3):
         return self.color_sensor.get_reflect()
 
     def actual_speed(self):
+        WHEEL_DIAMETER = 0.035 * 3.14
+        ANGLE_CIRCLE = 360
         left = self.left.get_attribute('speed')
         right = self.right.get_attribute('speed')
         return -(left+right)/2
+        angular_vel = -(left+right)/2.0
+        return round((angular_vel/ANGLE_CIRCLE) * WHEEL_DIAMETER, 3)
 
     def check_movement(self, time_interval, distance_margin):
         """Check for movement with proximity sensors.

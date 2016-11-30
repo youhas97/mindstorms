@@ -27,17 +27,12 @@ class GuardDog(Thread):
         self.log.addHandler(console)
 
         self.unit = None
-        self.newMode = None
+        self.NewMode = None
         self.actual_speed = tk.StringVar()
-
 
     def set_mode(self, Mode):
         """Set mode."""
         self.NewMode = Mode
-
-    def get_speed(self):
-        """Get the current speed of the unit."""
-        return self.unit.actual_speed()
 
     def run(self):
         """Run an iteration of the unit's current mode."""
@@ -48,7 +43,8 @@ class GuardDog(Thread):
                 self.mode = self.NewMode(self.unit)
                 self.NewMode = None
 
-            self.actual_speed.set(str(self.unit.actual_speed()))
+                
+            self.actual_speed.set(str(self.unit.actual_speed())+' m/s')
 
     def connect(self, address):
         """Connect to unit and create object."""

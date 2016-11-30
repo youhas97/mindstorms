@@ -13,11 +13,15 @@ class App():
         self.gd = GuardDog()
         self.master = master
 
-        container= tk.Frame(master, width=500, height=300)
-        container= tk.Frame(master, width=300, height=500)
-        container.pack(side='top', fill='both', expand=True)
+        container = tk.Frame(master, width=150, height=500)
+        container.pack(side='left', fill='both', expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
+
+        data = Data(master, controller=self)
+        data.pack(side='right', fill='both', expand=True)
+        data.grid_rowconfigure(0, weight=1)
+        data.grid_columnconfigure(1, weight=1)
 
         self.frames = {}
         for Frame in (Start, Build, Live):
@@ -40,6 +44,7 @@ class App():
             buttons -- list of titles and commands for buttons.
             cols -- the amount of colums in the grid.
         """
+        button_dict = {}
         for index, button in enumerate(buttons):
             row = index // cols
             col = index % cols
@@ -47,6 +52,8 @@ class App():
                                text=button[0],
                                command=button[1])
             tk_btn.grid(sticky=tk.W+tk.E, row=row, column=col)
+            button_dict[button[0]] = tk_btn
+        return button_dict
 
 
 class Start(tk.Frame):
@@ -69,6 +76,7 @@ class Start(tk.Frame):
         test = tk.Label(self, text=controller.gd.actual_speed)
         test.pack()
         test.place(relx=.7,rely=.125)
+
        # ip_entry.grid(sticky=tk.W+tk.E, row=4)
 
         """buttons = [
@@ -77,6 +85,24 @@ class Start(tk.Frame):
             ['connect', lambda: controller.gd.connect(ip_entry.get())],
         ]
         App.create_buttons(self, buttons)"""
+
+class Data(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+
+        self.create_data_field('Speed', controller.gd.actual_speed, (0,2))
+
+    def create_data_field(self, title, variable, pos):
+        title_lbl = tk.Label(self, text=title)
+        title_lbl.place(relx=pos[0], rely=pos[1])
+        data_lbl = tk.Label(self,
+                            textvariable=variable,
+                            font=('Helvetica', 40))
+        data_lbl.place(relx=pos[0], rely=pos[1]+0.05)
+        title_lbl.pack()
+        data_lbl.pack()
 
 
 class Live(tk.Frame):
