@@ -31,17 +31,34 @@ class LiveMode():
         self.dir_key_states[key] = False
 
     def calculate_movement(self):
+        """Calculate x,y direction from keys.
+        
+        Description:
+        Depending on current keys pressed a turn radius and
+        a positive or negative speed multiplier will be 
+        calculated.
+       
+        Returns:
+            direction -- direction in [-2, 2]
+            speed -- speed in [-1,1]
+        """
         dirs = []
         speeds = []
+        any_key_pressed = False
         for key, key_state in self.dir_key_states:
             if key_state:
+                any_key_pressed = True
                 direction = self.dir_keys[key][0]
                 speed = self.dir_keys[key][1]
                 if not direction is None: dirs.append(direction)
                 if not speed is None: speeds.append(speed)
+
         direction = sum(dirs)/len(dirs)
-        speed = sum(speeds)/len(speeds)
+        speed = sum(speeds)/len(speeds) if any_key_pressed else 0
         return direction, speed
 
     def run(unit):
         direction, speed = self.calculate_movement()
+
+        self.unit.set_speed(self.speed*speed)
+        self.unit.turn(direction)
