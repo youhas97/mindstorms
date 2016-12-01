@@ -11,4 +11,6 @@ Yohan: I have spent 8h on lab sessions, time has been spent on:
     -Coming up with ideas for improvemets for giu, for instance, came up with ideas to bind keys and use it in combination with the rest of our gui in live state, and more.
     - Rehearsing Tkinter
 
-Yousef:
+Yousef: I have spent a total of 9h, 8h during lab-sessions and 1h at home. Time has been spent on:
+-Trying to fix some bugs in surrender-function (robot doesnt recognize corners sometimes)
+-Started working on the "proper" patrolling function, did not push file because it is not worth pushing yet.
