@@ -1,4 +1,8 @@
-Noah:
+This week we've started working on the live mode for the gui. We've also started to plan how to implement the build mode and setting up the rest of the GUI. We've implemented meters for current speed and total distance traveled.
+
+Noah: I have spent 8h lab, 2h home, total: 10h:
+-calculated and displayed distance traveled
+-started working on live mode (with keyboard controls)A
 
 Yohan: I have spent 8h on lab sessions, time has been spent on:
     -Completing milestone 21, which is printing the speed in the gui.
