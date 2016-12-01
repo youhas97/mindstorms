@@ -30,16 +30,18 @@ class LiveMode():
         key = event.keysym
         self.dir_key_states[key] = False
 
-    def run(unit):
-        direction = (0, 0)
-        keys_pressed = (0, 0)
-        for key, key_state in self.key_states.items():
-            if not key_state: continue
-            for axis in range(2):
-                direction_value = self.dir_keys[key][axis]
-                if not direction_value is None:
-                    direction[axis] += direction_value
-                    keys_pressed[axis] += 1
-        for axis in range(2): direction[axis] /= keys_pressed[axis]
+    def calculate_movement(self):
+        dirs = []
+        speeds = []
+        for key, key_state in self.dir_key_states:
+            if key_state:
+                direction = self.dir_keys[key][0]
+                speed = self.dir_keys[key][1]
+                if not direction is None: dirs.append(direction)
+                if not speed is None: speeds.append(speed)
+        direction = sum(dirs)/len(dirs)
+        speed = sum(speeds)/len(speeds)
+        return direction, speed
 
-        self.
+    def run(unit):
+        direction, speed = self.calculate_movement()
