@@ -36,7 +36,7 @@ class App():
         """Raise a frame to the top."""
         self.frames[page_name].tkraise()
 
-    def create_buttons(frame, buttons, cols=1):
+    def create_buttons(frame, buttons, width=0, cols=1):
         """Create buttons in a grid pattern.
 
         Parameters:
@@ -50,7 +50,8 @@ class App():
             col = index % cols
             tk_btn = tk.Button(frame,
                                text=button[0],
-                               command=button[1])
+                               command=button[1],
+                               width=width)
             tk_btn.grid(sticky=tk.W+tk.E, row=row, column=col)
             button_dict[button[0]] = tk_btn
         return button_dict
@@ -73,9 +74,6 @@ class Start(tk.Frame):
                               command=lambda: controller.show_frame('Build'),width=20)
         build_btn.place(relx=.05, rely=.15)
 
-        test = tk.Label(self, text=controller.gd.actual_speed)
-        test.pack()
-        test.place(relx=.7,rely=.125)
 
        # ip_entry.grid(sticky=tk.W+tk.E, row=4)
 
@@ -117,8 +115,11 @@ class Live(tk.Frame):
             ['Left', lambda: print('left')],
             ['Right', lambda: print('right')],
         ]
-        App.create_buttons(self, buttons, 2)
-                
+        buttons_dict = App.create_buttons(self, buttons, width=6)
+        buttons_dict['Left'].place(relx=0.05,rely=.3)
+        buttons_dict['Forward'].place(relx=0.35, rely=0.1)
+        buttons_dict['Right'].place(relx=0.65, rely=0.3)
+        buttons_dict['Back'].place(relx=0.35, rely=0.5)
 
 
 
