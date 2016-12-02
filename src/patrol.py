@@ -9,14 +9,14 @@ class Patrol():
     MODE_NAMES = ['guard', 'peaceful']
 
     DISTANCE_THRESHOLD = 40
-    
+
     def __init__(self, speed=50, mode='peaceful'):
         self.speed = speed
         self.mode = mode
-        
+
     def set_speed(speed):
         self.speed = speed
-    
+
     def change_direction(self, unit):
         direction = choice([-1,1])
         unit.forward(-self.speed)
@@ -30,11 +30,11 @@ class Patrol():
         angle, distance = unit.seek(channel)
         print(angle, distance)
         return distance != -128
-        
+
     def activation_dance(self, unit):
         unit.stop()
         """"
-        #unit.speak('choke me daddy')
+        unit.speak('choke me daddy')
         sleep(2.5)
         unit.rotate_forever(100)
         sleep(0.15)
@@ -82,6 +82,6 @@ if __name__ == '__main__':
     mode = Patrol(speed=50)
     while True:
         mode = mode.run(unit)
-   
-        
-            
+
+
+
