@@ -1,3 +1,5 @@
+from time import sleep
+
 class IdleMode():
 
     """Let unit run idle."""
@@ -6,6 +8,7 @@ class IdleMode():
         unit.stop()
 
     def run(self, unit):
+        sleep(1)
         return self
 
         
