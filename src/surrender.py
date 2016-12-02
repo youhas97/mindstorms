@@ -14,14 +14,27 @@ class Surrender(FollowTape):
         sleep(2)
         unit.rotate(100,180)
         sleep(2.3)
-        unit.forward(80)
+        unit.forward(50)
 
     def in_corner(self, unit):
-        return 18 <= self.refl <= 22 and unit.color() == 'red'
+        return (20 <= self.refl <= 39 or self.refl >=45) and unit.color() == 'red'
+
+    def outside_corner(self, unit):
+        if abs(self.offset_hist[-1]) >= 0.95:
+            for offset in self.offset_hist[:-1]:
+                if abs(offset) >= 0.9:
+                    pass
+                else:
+                    return False
+            return True
+        return False
 
     def run(self, unit):
         super().run(unit)
+        print(self.refl, self.offset_hist)
         if self.in_corner(unit):
+            return idle.IdleMode(unit)
+        elif self.outside_corner(unit):
             return idle.IdleMode(unit)
         return self
 
