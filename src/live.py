@@ -1,32 +1,28 @@
 import os
 
-
 class LiveMode():
     
-    def __init__(unit, master):
+    def __init__(self, unit):
         os.system('xset r off')
-        self.master = master
         self.dir_keys = {
             'Left': (-2, None),
             'Right': (2, None),
             'Up': (0, 1),
             'Down': (0, -1)
         }
-        self.dir_key_states = {key: False for key in self.keys}
-        self.unit.stop()
+        self.dir_key_states = {key: False for key in self.dir_keys}
+        unit.stop()
 
-        self.bind_keys()
+    def bind_keys(self, master):
+        for key in self.dir_keys:
+            master.bind('<{}>'.format(key), self.dir_key_pressed)
+            master.bind('<KeyRelease-{}>'.format(key), self.dir_key_released)
 
-    def bind_keys():
-        for key in self.keys:
-            self.master.bind('<{}>'.format(key), self.key_pressed)
-            self.master.bind('<KeyRelease-{}>'.format(key), self.key_released)
-
-    def dir_key_pressed(event):
+    def dir_key_pressed(self, event):
         key = event.keysym
         self.dir_key_states[key] = True
 
-    def dir_key_released(event):
+    def dir_key_released(self, event):
         key = event.keysym
         self.dir_key_states[key] = False
 
@@ -45,7 +41,7 @@ class LiveMode():
         dirs = []
         speeds = []
         any_key_pressed = False
-        for key, key_state in self.dir_key_states:
+        for key, key_state in self.dir_key_states.items():
             if key_state:
                 any_key_pressed = True
                 direction = self.dir_keys[key][0]
@@ -57,8 +53,15 @@ class LiveMode():
         speed = sum(speeds)/len(speeds) if any_key_pressed else 0
         return direction, speed
 
-    def run(unit):
+    def run(self, unit):
         direction, speed = self.calculate_movement()
 
         self.unit.set_speed(self.speed*speed)
         self.unit.turn(direction)
+
+if __name__ == '__main__':
+    from unit import Unit
+    unit = Unit('192.168.0.112')
+    mode = LiveMode(unit)
+    while True:
+        mode.run()

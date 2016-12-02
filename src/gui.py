@@ -5,6 +5,7 @@ from thread import GuardDog
 import follow_tape
 import idle
 import patrol
+import live
 
 class App():
     """Root frame of GUI."""
@@ -24,7 +25,7 @@ class App():
         data.grid_columnconfigure(1, weight=1)
 
         self.frames = {}
-        for Frame in (Start, Build, Live):
+        for Frame in (Start, Live):
             page_name = Frame.__name__
             frame = Frame(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -34,7 +35,9 @@ class App():
 
     def show_frame(self, page_name):
         """Raise a frame to the top."""
-        self.frames[page_name].tkraise()
+        frame = self.frames[page_name]
+        frame.tkraise()
+        frame.show()
 
     def create_buttons(frame, buttons, cols=1):
         """Create buttons in a grid pattern.
@@ -57,36 +60,34 @@ class App():
 
 
 class Start(tk.Frame):
+    """Starting frame for GUI."""
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         ip_entry = tk.Entry(self)
         ip_entry.place(relx=.05 , rely=.9)
+        """
         connect_btn = tk.Button(self, text='connect', fg='white',
                                 command=lambda: controller.gd.connect(ip_entry.get()))
-        connect_btn.place(relx=.05 , rely=.8)
         live_btn = tk.Button(self, text='Live state', fg='white',
                              command=lambda: controller.show_frame('Live'),width=20)
-        live_btn.place(relx=.05, rely=.05)
-        build_btn = tk.Button(self, text='Building state', fg='white',
-                              command=lambda: controller.show_frame('Build'),width=20)
-        build_btn.place(relx=.05, rely=.15)
+        """
 
-        test = tk.Label(self, text=controller.gd.actual_speed)
-        test.pack()
-        test.place(relx=.7,rely=.125)
-
-       # ip_entry.grid(sticky=tk.W+tk.E, row=4)
-
-        """buttons = [
+        buttons = [
             ['Live state', lambda: controller.show_frame(Live.__name__)],
-            ['Building state', lambda: controller.show_frame(Build.__name__)],
             ['connect', lambda: controller.gd.connect(ip_entry.get())],
         ]
-        App.create_buttons(self, buttons)"""
+        buttons_dict = App.create_buttons(self, buttons)
+        buttons_dict['Live state'].place(relx=.05, rely=.05)
+        buttons_dict['connect'].place(relx=.05 , rely=.8)
+
+    def show(self):
+        pass
+
 
 class Data(tk.Frame):
+    """Side pane for data."""
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -107,6 +108,8 @@ class Data(tk.Frame):
 
 
 class Live(tk.Frame):
+    """Live mode frame."""
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -118,24 +121,11 @@ class Live(tk.Frame):
             ['Right', lambda: print('right')],
         ]
         App.create_buttons(self, buttons, 2)
-                
 
-
-
-
-class Build(tk.Frame):
-     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        self.controller = controller
-        back_btn = tk.Button(self, text='Go back', fg='white',
-                                command=lambda: controller.show_frame('Start'))
-        back_btn.grid(sticky=tk.W+tk.E, row=2)
-        
-
-        """buttons = [
-            ['Go back', lambda: controller.show_frame(Start.__name__)],
-        ]
-        App.create_buttons(self, buttons)"""
+    def show(self):
+        if not self.controller.gd.unit is None:
+            self.controller.gd.set_mode(live.LiveMode)
+            live_mode.bind_keys(self.controller.master)
 
 
 if (__name__ == '__main__'):

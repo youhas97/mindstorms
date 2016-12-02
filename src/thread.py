@@ -46,6 +46,8 @@ class GuardDog(Thread):
         time_prev = time_now = time()
 
         while True:
+            for func in self.queue:
+                func()
             time_prev = time_now
             time_now = time()
             time_delta = time_now - time_prev
