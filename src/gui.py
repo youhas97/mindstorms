@@ -39,7 +39,7 @@ class App():
         frame.tkraise()
         frame.show()
 
-    def create_buttons(frame, buttons, cols=1):
+    def create_buttons(frame, buttons, width=0, cols=1):
         """Create buttons in a grid pattern.
 
         Parameters:
@@ -53,7 +53,8 @@ class App():
             col = index % cols
             tk_btn = tk.Button(frame,
                                text=button[0],
-                               command=button[1])
+                               command=button[1],
+                               width=width)
             tk_btn.grid(sticky=tk.W+tk.E, row=row, column=col)
             button_dict[button[0]] = tk_btn
         return button_dict
@@ -65,14 +66,9 @@ class Start(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+
         ip_entry = tk.Entry(self)
         ip_entry.place(relx=.05 , rely=.9)
-        """
-        connect_btn = tk.Button(self, text='connect', fg='white',
-                                command=lambda: controller.gd.connect(ip_entry.get()))
-        live_btn = tk.Button(self, text='Live state', fg='white',
-                             command=lambda: controller.show_frame('Live'),width=20)
-        """
 
         buttons = [
             ['Live state', lambda: controller.show_frame(Live.__name__)],
@@ -120,7 +116,12 @@ class Live(tk.Frame):
             ['Left', lambda: print('left')],
             ['Right', lambda: print('right')],
         ]
-        App.create_buttons(self, buttons, 2)
+        
+        buttons_dict = App.create_buttons(self, buttons, width=6)
+        buttons_dict['Left'].place(relx=0.05,rely=.3)
+        buttons_dict['Forward'].place(relx=0.35, rely=0.1)
+        buttons_dict['Right'].place(relx=0.65, rely=0.3)
+        buttons_dict['Back'].place(relx=0.35, rely=0.5)
 
     def show(self):
         if not self.controller.gd.unit is None:
