@@ -46,7 +46,7 @@ class GuardDog(Thread):
         """Set mode."""
         self.NewMode = Mode
 
-    def queue_command(self, command, condition):
+    def queue_command(self, command, condition=lambda: True):
         """Send command to the queue.
 
         Param:
@@ -63,7 +63,7 @@ class GuardDog(Thread):
         """
         executed = []
         for item in self.queue:
-            condition, command = item
+            command, condition = item
             if condition(): 
                 command()
                 executed.append(item)
