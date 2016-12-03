@@ -155,7 +155,7 @@ class Live(ModeFrame):
             self.controller.gd.set_mode(live.LiveMode)
             self.controller.gd.queue_command(
                 command=lambda: gd.mode.bind_keys(self.controller.master),
-                condition=lambda: isinstance(gd.mode, follow_tape.FollowTape)
+                condition=lambda: isinstance(gd.mode, live.LiveMode)
             )
 
 
