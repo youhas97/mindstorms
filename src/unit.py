@@ -78,10 +78,10 @@ class Unit(Ev3):
         """
 
         if -1 <= direction <= 1:
-            # TODO does not work if speed is negative, fix
             speed_ratio = 1 - abs(direction)
             max_speed = 2 / (speed_ratio + 1) * self.speed
             if max_speed > 100: max_speed = 100
+            elif max_speed < -100: max_speed = -100
             min_speed = max_speed * speed_ratio
         elif -2 <= direction <= 2:
             max_speed = self.speed
