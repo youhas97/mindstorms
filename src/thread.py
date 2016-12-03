@@ -67,8 +67,10 @@ class GuardDog(Thread):
             if condition(): 
                 command()
                 executed.append(item)
+                self.log.info('executed a command in queue')
         for item in executed:
             self.queue.remove(item)
+        
         return len(executed)
 
     def calculate_speed_distance(self):
