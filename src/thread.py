@@ -12,7 +12,7 @@ class GuardDog(Thread):
     
     Public methods:
         set_mode -- set mode of unit.
-        get_speed -- get current speed of unit
+        queue_command -- queue function to run when condition is met
         connect -- connect to unit and create object
     """
 
@@ -22,6 +22,7 @@ class GuardDog(Thread):
         self.initiate_logger()
 
         self.unit = None
+        self.mode = None
         self.NewMode = None
 
         self.actual_speed = 0
@@ -29,6 +30,8 @@ class GuardDog(Thread):
 
         self.actual_speed_str = tk.StringVar()
         self.distance_str = tk.StringVar()
+
+        self.queue = []
 
     def initiate_logger(self):
         self.log = logging.getLogger('dog')
@@ -43,12 +46,34 @@ class GuardDog(Thread):
         """Set mode."""
         self.NewMode = Mode
 
+    def queue_command(self, command, condition):
+        """Send command to the queue.
+
+        Param:
+            command -- function to execute when condition returns true
+            condition -- function that returns true or false
+        """
+        self.queue.append([command, condition])
+
     def execute_queue(self):
-        pass
+        """Execute commands in queue if conditions are met.
+        
+        Returns:
+            amount of commands executed
+        """
+        executed = []
+        for item in self.queue:
+            condition, command = item
+            if condition(): 
+                command()
+                executed.append(item)
+        for item in executed:
+            self.queue.remove(item)
+        return len(executed)
 
     def calculate_speed_distance(self):
         self.time_prev = self.time
-        sellf.time = time()
+        self.time = time()
         time_delta = self.time - self.time_prev
 
         self.actual_speed = (self.unit.actual_speed())
@@ -56,20 +81,23 @@ class GuardDog(Thread):
 
         self.actual_speed_str.set('{} m/s'.format(round(self.actual_speed, 2)))
         self.distance_str.set('{} m'.format(round(self.distance, 2)))
+
+    def update_mode(self):
+        if self.NewMode:
+            self.mode = self.NewMode(self.unit)
+            self.log.info('mode changed to {}'.format(self.NewMode.__name__))
+            self.NewMode = None
     
     def run(self):
         """Run an iteration of the unit's current mode."""
         self.mode = idle.IdleMode(self.unit)
-        self.time_prev = self.time_now = time()
+        self.time_prev = self.time = time()
 
         while True:
+            self.update_mode()
             self.execute_queue()
             self.calculate_speed_distance()
-
             self.mode = self.mode.run(self.unit)
-            if self.NewMode:
-                self.mode = self.NewMode(self.unit)
-                self.NewMode = None
 
     def connect(self, address):
         """Connect to unit and create object."""
@@ -82,5 +110,3 @@ class GuardDog(Thread):
             self.log.error('failed to connect -- \'{}\''.format(address))
             self.log.error(err)
             return False
-
-
