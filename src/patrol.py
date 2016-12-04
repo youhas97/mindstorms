@@ -3,19 +3,25 @@ from time import sleep
 from random import randint, choice
 import threat
 
+import tkinter as tk
+
 class Patrol():
-    GUARD = 0
-    PEACEFUL = 1
+    PEACEFUL = 0
+    GUARD = 1
     MODE_NAMES = ['guard', 'peaceful']
 
     DISTANCE_THRESHOLD = 40
 
-    def __init__(self, speed=50, mode='peaceful'):
-        self.speed = speed
-        self.mode = mode
+    def __init__(self, unit):
+        self.speed = 40
+        self.patrol_mode = Patrol.PEACEFUL
 
-    def set_speed(speed):
+    def set_speed(self, speed):
         self.speed = speed
+
+    def set_mode(self, mode):
+        if self.patrol_mode != mode:
+            self.toggle_mode
 
     def change_direction(self, unit):
         direction = choice([-1,1])
@@ -24,12 +30,6 @@ class Patrol():
         unit.stop()
         unit.rotate(100, direction*randint(90,180))
         sleep(2)
-
-    def check_activation(self, unit):
-        channel = 1
-        angle, distance = unit.seek(channel)
-        print(angle, distance)
-        return distance != -128
 
     def activation_dance(self, unit):
         unit.stop()
@@ -49,8 +49,8 @@ class Patrol():
         sleep(2)
 
     def toggle_mode(self, unit):
-        self.mode = not self.mode
-        unit.speak('{} mode activated'.format(Patrol.MODE_NAMES[self.mode]))
+        self.patrol_mode ^= True
+        unit.speak('{} mode activated'.format(Patrol.MODE_NAMES[self.patrol_mode]))
         self.activation_dance(unit)
 
     def object_in_prox(self):
@@ -61,19 +61,16 @@ class Patrol():
         self.refl= unit.reflect()
         unit.forward(self.speed)
 
-        if self.check_activation(unit):
-            self.toggle_mode(unit)
-
         print(self.prox, self.refl)
         if self.refl < 10:
             self.change_direction(unit)
         elif self.object_in_prox():
-            if self.mode == Patrol.PEACEFUL:
+            if self.patrol_mode == Patrol.PEACEFUL:
                 unit.stop()
                 unit.speak('oh sorry')
                 sleep(2)
                 self.change_direction(unit)
-            elif self.mode == Patrol.GUARD:
+            elif self.patrol_mode == Patrol.GUARD:
                 return threat.ThreatMode()
         return self
 
@@ -82,6 +79,3 @@ if __name__ == '__main__':
     mode = Patrol(speed=50)
     while True:
         mode = mode.run(unit)
-
-
-
