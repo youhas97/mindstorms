@@ -20,7 +20,9 @@ class GuardDog(Thread):
         Thread.__init__(self)
         
         self.initiate_logger()
+        self.set_start_values()
 
+    def set_start_values():
         self.unit = None
         self.mode = None
         self.NewMode = None
