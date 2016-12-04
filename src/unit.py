@@ -138,7 +138,6 @@ class Unit(Ev3):
         ANGLE_CIRCLE = 360
         left = self.left.get_attribute('speed')
         right = self.right.get_attribute('speed')
-        return -(left+right)/2
         angular_vel = -(left+right)/2.0
         return round((angular_vel/ANGLE_CIRCLE) * WHEEL_DIAMETER, 3)
 
@@ -163,8 +162,7 @@ class Unit(Ev3):
             if distance_max-distance_min > distance_margin: return True
 
 if __name__ == '__main__':
-    unit = Unit('192.168.0.112')
+    unit = Unit('192.168.43.7')
     unit.forward(10)
-    unit.turn(2)
     while True:
-        pass
+        print(unit.actual_speed())
