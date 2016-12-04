@@ -20,6 +20,7 @@ class App():
         self.show_frame(Start.__name__)
 
     def add_subframes(self):
+        """Add container and data side pane."""
         self.container = tk.Frame(self.master, width=150, height=500)
         self.container.pack(side='left', fill='both', expand=True)
         self.container.grid_rowconfigure(0, weight=1)
@@ -30,8 +31,9 @@ class App():
         data.grid_rowconfigure(0, weight=1)
 
     def create_mode_frames(self):
+        """Create objects for mode frames."""
         self.frames = {}
-        for Frame in (Start, Live):
+        for Frame in (Start, Live, Patrol):
             page_name = Frame.__name__
             frame = Frame(parent=self.container, controller=self)
             self.frames[page_name] = frame
@@ -44,12 +46,16 @@ class App():
         frame.show()
 
     def create_buttons(frame, buttons, width=0):
-        """Create buttons in a grid pattern.
+        """Create button objects.
 
         Parameters:
             frame -- tk frame to place buttons inside.
             buttons -- list of titles and commands for buttons.
-            cols -- the amount of colums in the grid.
+            width -- the width of all the buttons.
+
+        Returns:
+            buttons_dict -- a dictionary of all buttons
+                            with the title as key.
         """
         button_dict = {}
         for index, button in enumerate(buttons):
@@ -73,6 +79,7 @@ class Data(tk.Frame):
         self.create_data_field('Distance', controller.gd.distance_str, (0,0.35))
 
     def create_data_field(self, title, variable, pos):
+        """Create a label with a title and data output."""
         title_lbl = tk.Label(self, text=title)
         data_lbl = tk.Label(
             self,
@@ -86,8 +93,10 @@ class Data(tk.Frame):
 
 
 class ModeFrame(tk.Frame):
+    """Parent class for all mode frames."""
     
     def __init__(self, parent, controller):
+        """Init frame and add back button."""
         tk.Frame.__init__(self, parent)
         self.controller = controller
         
@@ -98,10 +107,10 @@ class ModeFrame(tk.Frame):
                 command=lambda: controller.show_frame(Start.__name__),
                 width=10
             )
-            back_btn.place(relx=0.05, rely=0.9)
-
+            back_btn.place(relx=0.05, rely=0.85)
 
     def show(self):
+        """Is run when frame is raised to top."""
         pass
 
 
@@ -109,6 +118,7 @@ class Start(ModeFrame):
     """Starting frame for GUI."""
 
     def __init__(self, parent, controller):
+        """Add widgets."""
         super().__init__(parent, controller)
 
         ip_entry = tk.Entry(self)
@@ -116,14 +126,12 @@ class Start(ModeFrame):
 
         buttons = [
             ['Live state', lambda: controller.show_frame(Live.__name__)],
-            ['Guard', lambda: controller.show_frame(Guard.__name__)],
-            ['Peaceful', lambda: controller.show_frame(Peaceful.__name__)],
+            ['Patrol', lambda: controller.show_frame(Patrol.__name__)],
             ['connect', lambda: controller.gd.connect(ip_entry.get())],
         ]
         dir_btns = App.create_buttons(self, buttons, width=10)
         dir_btns['Live state'].place(relx=.05, rely=.05)
-        dir_btns['Guard'].place(relx=.05, rely=.15)
-        dir_btns['Peaceful'].place(relx=.05, rely=.25)
+        dir_btns['Patrol'].place(relx=.05, rely=.15)
         dir_btns['connect'].place(relx=.05 , rely=.8)
 
 
@@ -150,13 +158,52 @@ class Live(ModeFrame):
         dir_btns['Back'].place(relx=0.35, rely=0.5)
 
     def show(self):
+        """Start live mode and bind keys."""
         gd = self.controller.gd
-        if not gd.unit is None:
+        if gd.unit:
             self.controller.gd.set_mode(live.LiveMode)
             self.controller.gd.queue_command(
                 command=lambda: gd.mode.bind_keys(self.controller.master),
                 condition=lambda: isinstance(gd.mode, live.LiveMode)
             )
+
+
+class Patrol(ModeFrame):
+    """Patrol mode frame."""
+
+    def __init__(self, parent, controller):
+        """Add widgets."""
+        super().__init__(parent, controller)
+        
+        self.add_radio_buttons()
+
+    def add_radio_buttons(self):
+        mode = tk.IntVar()
+        radio_peace = tk.Radiobutton(
+            self,
+            text="Peaceful",
+            command=lambda: self.controller.gd.queue_command(
+                command=lambda: self.controller.gd.mode.set_mode(patrol.Patrol.PEACEFUL),
+                condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
+            ),
+            variable=mode,
+            value=0,
+        ).pack()
+        radio_peace = tk.Radiobutton(
+            self,
+            text="Guard",
+            command=lambda: self.controller.gd.queue_command(
+                command=lambda: self.controller.gd.mode.set_mode(patrol.Patrol.GUARD),
+                condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
+            ),
+            variable=mode,
+            value=1
+        ).pack()
+
+    def show(self):
+        """Start patrol mode."""
+        if self.controller.gd.unit:
+            self.controller.gd.set_mode(patrol.Patrol)
 
 
 if (__name__ == '__main__'):
