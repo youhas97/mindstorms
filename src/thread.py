@@ -53,11 +53,12 @@ class GuardDog(Thread):
             command -- function to execute when condition returns true
             condition -- function that returns true or false
         """
-        self.queue.append([command, condition])
+        self.queue.append((command, condition))
+        self.log.info('added command, now {} in queue'.format(len(self.queue)))
 
     def execute_queue(self):
         """Execute commands in queue if conditions are met.
-        
+
         Returns:
             amount of commands executed
         """
@@ -67,13 +68,15 @@ class GuardDog(Thread):
             if condition(): 
                 command()
                 executed.append(item)
-                self.log.info('executed a command in queue')
         for item in executed:
             self.queue.remove(item)
         
+        exec_count = len(executed)
+        self.log.info('{} of {} executed.'.format(exec_count, len(self.queue)))
         return len(executed)
 
     def calculate_speed_distance(self):
+        """Calculate current speed and total distance traveled."""
         self.time_prev = self.time
         self.time = time()
         time_delta = self.time - self.time_prev
@@ -85,13 +88,14 @@ class GuardDog(Thread):
         self.distance_str.set('{} m'.format(round(self.distance, 2)))
 
     def update_mode(self):
+        """Change mode if new mode is requested."""
         if self.NewMode:
             self.mode = self.NewMode(self.unit)
             self.log.info('mode changed to {}'.format(self.NewMode.__name__))
             self.NewMode = None
     
     def run(self):
-        """Run an iteration of the unit's current mode."""
+        """Run an iteration."""
         self.mode = idle.IdleMode(self.unit)
         self.time_prev = self.time = time()
 
