@@ -8,12 +8,13 @@ import tkinter as tk
 class Patrol():
     PEACEFUL = 0
     GUARD = 1
-    MODE_NAMES = ['guard', 'peaceful']
+    MODE_NAMES = ['peaceful', 'guard']
 
     DISTANCE_THRESHOLD = 40
 
     def __init__(self, unit):
         self.speed = 40
+        self.mode_changed = False
         self.patrol_mode = Patrol.PEACEFUL
 
     def set_speed(self, speed):
@@ -21,7 +22,12 @@ class Patrol():
 
     def set_mode(self, mode):
         if self.patrol_mode != mode:
-            self.toggle_mode
+            self.mode_changed = True
+
+    def update_mode(self, unit):
+        if self.mode_changed:
+            self.toggle_mode(unit)
+            self.mode_changed = False
 
     def change_direction(self, unit):
         direction = choice([-1,1])
@@ -61,7 +67,7 @@ class Patrol():
         self.refl= unit.reflect()
         unit.forward(self.speed)
 
-        print(self.prox, self.refl)
+        self.update_mode(unit)
         if self.refl < 10:
             self.change_direction(unit)
         elif self.object_in_prox():
@@ -71,7 +77,7 @@ class Patrol():
                 sleep(2)
                 self.change_direction(unit)
             elif self.patrol_mode == Patrol.GUARD:
-                return threat.ThreatMode()
+                return threat.ThreatMode(unit)
         return self
 
 if __name__ == '__main__':
