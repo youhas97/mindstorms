@@ -16,7 +16,6 @@ class App():
         
         self.add_subframes()
         self.create_mode_frames()
-
         self.show_frame(Start.__name__)
 
     def add_subframes(self):
@@ -178,27 +177,32 @@ class Patrol(ModeFrame):
         self.add_radio_buttons()
 
     def add_radio_buttons(self):
-        mode = tk.IntVar()
+        self.mode = tk.IntVar()
+
         radio_peace = tk.Radiobutton(
             self,
-            text="Peaceful",
+            text='Peaceful',
             command=lambda: self.controller.gd.queue_command(
                 command=lambda: self.controller.gd.mode.set_mode(patrol.Patrol.PEACEFUL),
                 condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
             ),
-            variable=mode,
-            value=0,
-        ).pack()
-        radio_peace = tk.Radiobutton(
+            variable=self.mode,
+            value=1,
+        )
+        radio_peace.pack()
+        radio_guard = tk.Radiobutton(
             self,
-            text="Guard",
+            text='Guard',
             command=lambda: self.controller.gd.queue_command(
                 command=lambda: self.controller.gd.mode.set_mode(patrol.Patrol.GUARD),
                 condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
             ),
-            variable=mode,
-            value=1
-        ).pack()
+            variable=self.mode,
+            value=2
+        )
+        radio_guard.pack()
+
+        self.mode.set(1)
 
     def show(self):
         """Start patrol mode."""
