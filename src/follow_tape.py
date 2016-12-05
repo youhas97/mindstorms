@@ -3,7 +3,7 @@ from time import sleep, time
 
 class FollowTape():
     """Follow tape on the floor.
-    
+
     Public methods:
         run -- Run an iteration of the follow tape mode.
     """
@@ -24,9 +24,6 @@ class FollowTape():
         self.min_speed = 25
 
         self.turn = 0
-        self.turn_prev = 0
-
-        self.direction = 1
 
         unit.set_speed(20)
 
@@ -59,7 +56,7 @@ class FollowTape():
 
     def adjust_speed(self, unit):
         """Control speed of unit.
-    
+
         Description:
             Increases speed if reflection has low variation.
             Decreases speed if reflection has high variation.
@@ -79,26 +76,24 @@ class FollowTape():
 
     def adjust_turn(self, unit):
         """Control turn value for unit."""
-        PROPORTIONAL_COEFF = 1
+        proportional_coeff = 1.25
         integral_coeff = 0.5
         derivative_coeff = 0.75
 
         print(self.offset_hist)
 
-        self.turn_prev = self.turn
-        self.turn = PROPORTIONAL_COEFF * self.offset \
+        self.turn = proportional_coeff * self.offset \
                   + integral_coeff * (sum(self.offset_hist) / self.hist_len) \
                   + derivative_coeff * (self.offset - self.offset_prev)
 
-        self.turn /= float(PROPORTIONAL_COEFF + integral_coeff + derivative_coeff * 2)
-        self.turn *= self.direction
+        self.turn /= float(proportional_coeff+integral_coeff+derivative_coeff*2)
         self.turn *= 2 # max turn value
 
     def run(self, unit):
         """Run an iteration of the follow tape mode.
 
         Description:
-            Should be run from a loop. Executes all 
+            Should be run from a loop. Executes all
             methods needed to follow the tape. Variables
             accross iterations are stored in the object.
         """
@@ -111,7 +106,7 @@ class FollowTape():
             self.adjust_turn(unit)
 
         unit.turn(self.turn)
-        
+
         return self
 
 if __name__ == '__main__':
