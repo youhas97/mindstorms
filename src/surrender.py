@@ -20,21 +20,25 @@ class Surrender(FollowTape):
         return (20 <= self.refl <= 39 or self.refl >=45) and unit.color() == 'red'
 
     def outside_corner(self, unit):
-        if abs(self.offset_hist[-1]) >= 0.95:
-            for offset in self.offset_hist[:-1]:
-                if abs(offset) >= 0.9:
-                    pass
-                else:
-                    return False
-            return True
+        print((-0.8 < self.offset_hist[0] < 0 < self.offset_hist[1] < 0.8))
+        print((-0.8 < self.offset_hist[1] < 0 < self.offset_hist[0] < 0.8))
+        if (-0.8 < self.offset_hist[0] < 0 < self.offset_hist[1] < 0.8) \
+        or (-0.8 < self.offset_hist[1] < 0 < self.offset_hist[0] < 0.8):
+            if abs(self.offset_hist[-1]) >= 0.85:
+                for offset in self.offset_hist[1:-1]:
+                    if abs(offset) >= 0.8:
+                        pass
+                    else:
+                        print('break')
+                        return False
+                print('true')
+                return True
         return False
 
     def run(self, unit):
         super().run(unit)
         print(self.refl, self.offset_hist)
-        if self.in_corner(unit):
-            return idle.IdleMode(unit)
-        elif self.outside_corner(unit):
+        if self.in_corner(unit) or self.outside_corner(unit):
             return idle.IdleMode(unit)
         return self
 
