@@ -22,7 +22,7 @@ class GuardDog(Thread):
         self.initiate_logger()
         self.set_start_values()
 
-    def set_start_values():
+    def set_start_values(self):
         self.unit = None
         self.mode = None
         self.NewMode = None
@@ -74,7 +74,7 @@ class GuardDog(Thread):
             self.queue.remove(item)
         
         exec_count = len(executed)
-        self.log.info('{} of {} executed.'.format(exec_count, len(self.queue)))
+        if exec_count: self.log.info('{} of {} executed.'.format(exec_count, len(self.queue)))
         return len(executed)
 
     def calculate_speed_distance(self):
@@ -83,8 +83,8 @@ class GuardDog(Thread):
         self.time = time()
         time_delta = self.time - self.time_prev
 
-        self.actual_speed = (self.unit.actual_speed())
-        self.distance = (self.distance+self.actual_speed*time_delta)
+        self.actual_speed = self.unit.actual_speed()
+        self.distance += abs(self.actual_speed*time_delta)
 
         self.actual_speed_str.set('{} m/s'.format(round(self.actual_speed, 2)))
         self.distance_str.set('{} m'.format(round(self.distance, 2)))
