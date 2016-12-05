@@ -6,7 +6,7 @@ class Unit(Ev3):
 
     def __init__(self, ip):
         super().__init__(ip)
-        
+
         # ports
         left_motor = 'D'
         right_motor = 'A'
@@ -34,7 +34,7 @@ class Unit(Ev3):
         self.left.run_forever(-self.speed, run=False)
         self.right.run_forever(-self.speed, run=False)
         self.start_motors(self.wheels)
-    
+
     def rotate_forever(self, speed):
         """Make the unit rotate."""
         self.set_speed(speed)
@@ -44,7 +44,7 @@ class Unit(Ev3):
 
     def turn(self, direction):
         """Turn unit while moving.
-        
+
         Params:
             direction -- float between -2 and 2 indicating
                          turn radius and direction
@@ -64,18 +64,20 @@ class Unit(Ev3):
 
         Derivation:
             speed_ratio/direction decides the ratio of speed
-            between the two wheels, therefore deciding the 
+            between the two wheels, therefore deciding the
             turn radius:
                 min_speed / max_speed = speed_ratio
                     --> min_speed = max_speed * speed_ratio
 
-            In order to not slow down the unit during turning, 
-            the average speed of the wheels should be the 
+            In order to not slow down the unit during turning,
+            the average speed of the wheels should be the
             current speed of the unit (as long as it doesnt
             exceed motors' the speed limit):
                 ( max_speed + min_speed ) / 2 = self.speed
                     --> max_speed = 2 * speed_ratio / self.speed
         """
+
+        print(direction)
 
         if -1 <= direction <= 1:
             speed_ratio = 1 - abs(direction)
@@ -91,7 +93,7 @@ class Unit(Ev3):
 
         if direction > 0: left_speed, right_speed = max_speed, min_speed
         else:             left_speed, right_speed = min_speed, max_speed
-       
+
         self.left.run_forever(-round(left_speed))
         self.right.run_forever(-round(right_speed))
 
@@ -145,7 +147,7 @@ class Unit(Ev3):
         """Check for movement with proximity sensors.
 
         Params:
-            time_interval -- the maximum time to wait for 
+            time_interval -- the maximum time to wait for
                              movement
             distance_margin -- the variation in distance
                                which counts as movement
