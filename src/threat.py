@@ -6,7 +6,7 @@ import surrender
 
 class ThreatMode():
 
-    def __init__(self):
+    def __init__(self, unit):
         self.distance = 50
 
     def detect_threat(self, unit):
@@ -42,7 +42,7 @@ class ThreatMode():
             if unit.prox() <= self.distance:
                 return surrender.Surrender(unit)
         else:
-            return patrol.Patrol()
+            return patrol.Patrol(unit)
         return self
 
 

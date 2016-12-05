@@ -74,7 +74,10 @@ class GuardDog(Thread):
             self.queue.remove(item)
         
         exec_count = len(executed)
-        if exec_count: self.log.info('{} of {} executed.'.format(exec_count, len(self.queue)))
+        if exec_count:
+            self.log.info('{} of {} executed.'.format(
+                exec_count, len(self.queue)+exec_count)
+            )
         return len(executed)
 
     def calculate_speed_distance(self):
