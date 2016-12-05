@@ -54,7 +54,8 @@ class App():
             width -- the width of all the buttons.
 
         Returns:
-            buttons_dict -- a dictionary of all buttons
+         
+        buttons_dict -- a dictionary of all buttons
                             with the title as key.
         """
         button_dict = {}
@@ -65,6 +66,7 @@ class App():
                 command=button[1],
                 width=width
             )
+            tk_btn.grid(row=index)
             button_dict[button[0]] = tk_btn
         return button_dict
 
@@ -142,7 +144,23 @@ class Live(ModeFrame):
         super().__init__(parent, controller)
         
         self.add_buttons()
+        
+        buttons = [
+             ['Patrol', lambda: controller.gd.set_mode(patrol.Patrol)],
+             ['Follow tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
+             ['Follow me', lambda: controller.gd.set_mode(lazyaf.GetOverHere())],
+             ['Idle', lambda: controller.gd.set_mode(idle.IdleMode)]
+        ]
+        buttons = App.create_buttons(self, buttons, width=6)
 
+        speak_entry = tk.Entry(self)
+        speak_entry.place(relx=.0005,rely=.385)
+        speak_button = tk.Button(self,
+             text='Speak', 
+             command=lambda: controller.gd.unit.speak(speak_entry.get()))
+        speak_button.place(relx=.570, rely=.375)
+        
+        
     def add_buttons(self):
         dir_btns_commands = [
             ['Forward', lambda: print('Up')],
@@ -151,11 +169,6 @@ class Live(ModeFrame):
             ['Back', lambda: print('Down')],
         ]
         
-        dir_btns = App.create_buttons(self, dir_btns_commands, width=6)
-        dir_btns['Forward'].place(relx=0.35, rely=0.1)
-        dir_btns['Left'].place(relx=0.05,rely=.3)
-        dir_btns['Right'].place(relx=0.65, rely=0.3)
-        dir_btns['Back'].place(relx=0.35, rely=0.5)
 
     def show(self):
         """Start live mode and bind keys."""
@@ -199,7 +212,6 @@ class Patrol(ModeFrame):
             variable=mode,
             value=1
         ).pack()
-
     def show(self):
         """Start patrol mode."""
         if self.controller.gd.unit:
