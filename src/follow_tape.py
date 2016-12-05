@@ -76,7 +76,7 @@ class FollowTape():
 
     def adjust_turn(self, unit):
         """Control turn value for unit."""
-        proportional_coeff = 1.25
+        proportional_coeff = 1
         integral_coeff = 0.5
         derivative_coeff = 0.75
 
