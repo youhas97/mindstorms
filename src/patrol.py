@@ -8,7 +8,6 @@ import tkinter as tk
 class Patrol():
     PEACEFUL = 0
     GUARD = 1
-    MODE_NAMES = ['peaceful', 'guard']
 
     DISTANCE_THRESHOLD = 40
 
@@ -16,11 +15,12 @@ class Patrol():
         self.speed = 40
         self.mode_changed = False
         self.patrol_mode = Patrol.PEACEFUL
+        self.patrol_square = True
 
     def set_speed(self, speed):
         self.speed = speed
 
-    def set_mode(self, mode):
+    def set_patrol_mode(self, mode):
         if self.patrol_mode != mode:
             self.mode_changed = True
 
@@ -56,6 +56,7 @@ class Patrol():
 
     def toggle_mode(self, unit):
         self.patrol_mode ^= True
+        MODE_NAMES = ['peaceful', 'guard']
         unit.speak('{} mode activated'.format(Patrol.MODE_NAMES[self.patrol_mode]))
         self.activation_dance(unit)
 
@@ -64,11 +65,10 @@ class Patrol():
 
     def run(self, unit):
         self.prox = unit.ir_sensor.get_prox()
-        self.refl= unit.reflect()
         unit.forward(self.speed)
 
         self.update_mode(unit)
-        if self.refl < 10:
+        if self.patrol_square and unit.reflect() < 10:
             self.change_direction(unit)
         elif self.object_in_prox():
             if self.patrol_mode == Patrol.PEACEFUL:
