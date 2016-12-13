@@ -1,5 +1,6 @@
 from api.ev3 import Ev3
 from time import sleep, time
+from random import choice
 
 class Unit(Ev3):
     """Handle unit."""
@@ -41,6 +42,14 @@ class Unit(Ev3):
         self.left.run_forever(-self.speed, run=False)
         self.right.run_forever(self.speed, run=False)
         self.start_motors(self.wheels)
+
+    def change_direction(self):
+        self.forward(-self.speed)
+        sleep(0.8)
+        self.stop()
+        direction = choice([-1,1])
+        self.rotate(100, direction*randint(90,180))
+        sleep(2)
 
     def turn(self, direction):
         """Turn unit while moving.

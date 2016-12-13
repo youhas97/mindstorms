@@ -1,6 +1,6 @@
 from unit import Unit
 from time import sleep
-from random import randint, choice
+from random import randint
 import threat
 
 import tkinter as tk
@@ -11,10 +11,10 @@ class Patrol():
 
     DISTANCE_THRESHOLD = 40
 
-    def __init__(self, unit):
+    def __init__(self, unit, mode=0):
         self.speed = 40
         self.mode_changed = False
-        self.patrol_mode = Patrol.PEACEFUL
+        self.patrol_mode = mode
         self.patrol_square = True
 
     def set_speed(self, speed):
@@ -29,36 +29,20 @@ class Patrol():
             self.toggle_mode(unit)
             self.mode_changed = False
 
-    def change_direction(self, unit):
-        direction = choice([-1,1])
-        unit.forward(-self.speed)
-        sleep(0.8)
-        unit.stop()
-        unit.rotate(100, direction*randint(90,180))
-        sleep(2)
-
     def activation_dance(self, unit):
         unit.stop()
-        """"
-        unit.speak('choke me daddy')
-        sleep(2.5)
         unit.rotate_forever(100)
         sleep(0.15)
         unit.rotate_forever(-100)
-        sleep(0.6)
-        unit.rotate_forever(100)
-        sleep(3)
-        unit.rotate_forever(-100)
-        sleep(0.15)
+        sleep(0.1)
         unit.stop()
-        """
-        sleep(2)
 
     def toggle_mode(self, unit):
         self.patrol_mode ^= True
         MODE_NAMES = ['peaceful', 'guard']
-        unit.speak('{} mode activated'.format(Patrol.MODE_NAMES[self.patrol_mode]))
         self.activation_dance(unit)
+        unit.speak('{} mode activated'.format(MODE_NAMES[self.patrol_mode]))
+        sleep(2.5)
 
     def object_in_prox(self):
         return self.prox < Patrol.DISTANCE_THRESHOLD
@@ -68,16 +52,19 @@ class Patrol():
         unit.forward(self.speed)
 
         self.update_mode(unit)
-        if self.patrol_square and unit.reflect() < 10:
+        if self.patrol_square and unit.reflect() < 15:
             self.change_direction(unit)
         elif self.object_in_prox():
+            print('prox')
             if self.patrol_mode == Patrol.PEACEFUL:
+                print('pec')
                 unit.stop()
                 unit.speak('oh sorry')
                 sleep(2)
-                self.change_direction(unit)
+                self.unit.change_direction()
             elif self.patrol_mode == Patrol.GUARD:
-                return threat.ThreatMode(unit)
+                print('gud')
+                return threat.ThreatMode(unit, self.patrol_mode)
         return self
 
 if __name__ == '__main__':
