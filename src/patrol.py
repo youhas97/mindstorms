@@ -1,6 +1,5 @@
 from unit import Unit
 from time import sleep
-from random import randint
 import threat
 
 import tkinter as tk
@@ -53,7 +52,7 @@ class Patrol():
 
         self.update_mode(unit)
         if self.patrol_square and unit.reflect() < 15:
-            self.change_direction(unit)
+            unit.change_direction(self.speed)
         elif self.object_in_prox():
             print('prox')
             if self.patrol_mode == Patrol.PEACEFUL:
@@ -61,10 +60,10 @@ class Patrol():
                 unit.stop()
                 unit.speak('oh sorry')
                 sleep(2)
-                self.unit.change_direction()
+                unit.change_direction(self.speed)
             elif self.patrol_mode == Patrol.GUARD:
                 print('gud')
-                return threat.ThreatMode(unit, self.patrol_mode)
+                return threat.ThreatMode(unit, speed=self.speed)
         return self
 
 if __name__ == '__main__':

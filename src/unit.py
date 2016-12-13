@@ -1,6 +1,6 @@
 from api.ev3 import Ev3
 from time import sleep, time
-from random import choice
+from random import choice, randint
 
 class Unit(Ev3):
     """Handle unit."""
@@ -43,8 +43,8 @@ class Unit(Ev3):
         self.right.run_forever(self.speed, run=False)
         self.start_motors(self.wheels)
 
-    def change_direction(self):
-        self.forward(-self.speed)
+    def change_direction(self, speed):
+        self.forward(-speed)
         sleep(0.8)
         self.stop()
         direction = choice([-1,1])

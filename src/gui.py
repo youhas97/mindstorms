@@ -197,7 +197,7 @@ class Patrol(ModeFrame):
             self,
             text='Peaceful',
             command=lambda: self.controller.gd.queue_command(
-                command=lambda: self.controller.gd.mode.set_mode(patrol.Patrol.PEACEFUL),
+                command=lambda: self.controller.gd.mode.set_patrol_mode(patrol.Patrol.PEACEFUL),
                 condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
             ),
             variable=self.mode,
@@ -208,7 +208,7 @@ class Patrol(ModeFrame):
             self,
             text='Guard',
             command=lambda: self.controller.gd.queue_command(
-                command=lambda: self.controller.gd.mode.set_mode(patrol.Patrol.GUARD),
+                command=lambda: self.controller.gd.mode.set_patrol_mode(patrol.Patrol.GUARD),
                 condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
             ),
             variable=self.mode,

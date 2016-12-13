@@ -6,13 +6,15 @@ import surrender
 
 class ThreatMode():
 
-    def __init__(self, unit):
+    def __init__(self, unit, speed=40):
+        self.speed = speed
         self.distance = 50
 
     def detect_threat(self, unit):
         if unit.prox() <= self.distance:
             unit.stop()
-            if unit.check_movement(2,5) and unit.prox() <= self.distance:
+            sleep(0.2)
+            if unit.check_movement(2, 2) and unit.prox() <= self.distance:
                 unit.speak('get out')
                 sleep(1)
                 for seconds in ['five','four','three','two','one']:
@@ -23,6 +25,9 @@ class ThreatMode():
                         unit.stop()
                         return False
                 return True
+            else:
+                unit.change_direction(self.speed)
+                return patrol.Patrol(unit, patrol.Patrol.GUARD)
 
     def shoot(self, unit):
         unit.rotate(100,150)
@@ -42,7 +47,7 @@ class ThreatMode():
             if unit.prox() <= self.distance:
                 return surrender.Surrender(unit)
         else:
-            return patrol.Patrol(unit)
+            return patrol.Patrol(unit, patrol.Patrol.GUARD)
         return self
 
 
