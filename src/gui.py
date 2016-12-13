@@ -6,6 +6,7 @@ import follow_tape
 import idle
 import patrol
 import live
+import lazyaf
 
 class App():
     """Root frame of GUI."""
@@ -147,7 +148,7 @@ class Live(ModeFrame):
         buttons = [
              ['Patrol', lambda: controller.gd.set_mode(patrol.Patrol)],
              ['Follow tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
-             ['Follow me', lambda: controller.gd.set_mode(lazyaf.GetOverHere())],
+             ['Follow me', lambda: controller.gd.set_mode(lazyaf.GetOverHere)],
              ['Idle', lambda: controller.gd.set_mode(idle.IdleMode)]
         ]
         buttons = App.create_buttons(self, buttons, width=6)
