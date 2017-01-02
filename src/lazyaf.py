@@ -11,6 +11,7 @@ class GetOverHere(FollowTape):
         self.angle, self.distance = unit.seek(2)
 
     def update_seek(self, unit):
+        """update angle and distance values"""
         self.angle_prev, self.distance_prev = self.angle, self.distance
         self.angle, self.distance = unit.seek(2)
 
@@ -20,11 +21,13 @@ class GetOverHere(FollowTape):
         self.offset = self.angle / 25.0
 
     def adjust_speed(self, unit):
+        """adjust movement speed"""
         super().adjust_speed(unit)
         if self.distance == -128:
             unit.set_speed(0)
 
     def run(self, unit):
+        """start following remote"""
         self.update_seek(unit)
         self.calculate_offset(unit)
         self.adjust_speed(unit)
