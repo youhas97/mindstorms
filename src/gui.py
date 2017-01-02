@@ -162,6 +162,7 @@ class Live(ModeFrame):
         
         
     def add_buttons(self):
+        """Create direction buttons"""
         dir_btns_commands = [
             ['Forward', lambda: print('Up')],
             ['Left', lambda: print('Left')],
@@ -191,6 +192,7 @@ class Patrol(ModeFrame):
         self.add_radio_buttons()
 
     def add_radio_buttons(self):
+        """Adds two radio buttons for peaceful and guard mode"""
         self.mode = tk.IntVar()
 
         radio_peace = tk.Radiobutton(
