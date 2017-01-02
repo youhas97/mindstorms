@@ -17,18 +17,22 @@ class Patrol():
         self.patrol_square = True
 
     def set_speed(self, speed):
+        """sets the speed"""
         self.speed = speed
 
     def set_patrol_mode(self, mode):
+        """switches mode"""
         if self.patrol_mode != mode:
             self.mode_changed = True
 
     def update_mode(self, unit):
+        """updates mode"""
         if self.mode_changed:
             self.toggle_mode(unit)
             self.mode_changed = False
 
     def activation_dance(self, unit):
+        """dance used for activation of robot"""
         unit.stop()
         unit.rotate_forever(100)
         sleep(0.15)
@@ -37,6 +41,7 @@ class Patrol():
         unit.stop()
 
     def toggle_mode(self, unit):
+        """toggles between peaceful and guard mode"""
         self.patrol_mode ^= True
         MODE_NAMES = ['peaceful', 'guard']
         self.activation_dance(unit)
@@ -44,9 +49,11 @@ class Patrol():
         sleep(2.5)
 
     def object_in_prox(self):
+        """checks if object is in sight range"""
         return self.prox < Patrol.DISTANCE_THRESHOLD
 
     def run(self, unit):
+        """run an iteration of patrol"""
         self.prox = unit.ir_sensor.get_prox()
         unit.forward(self.speed)
 
