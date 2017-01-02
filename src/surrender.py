@@ -17,9 +17,20 @@ class Surrender(FollowTape):
         unit.forward(50)
 
     def in_corner(self, unit):
+        """
+        checks if robot is in corner
+        
+        description:
+            There is a red tape on the outside of every corner which the color
+            sensor picks up on and registers as a corner
+        """
         return (20 <= self.refl <= 39 or self.refl >=45) and unit.color() == 'red'
 
     def outside_corner(self, unit):
+        """
+        checks for rare occasion where robot doesnt register corner but movement
+        pattern indicates that a corner is closeby
+        """
         print((-0.8 < self.offset_hist[0] < 0 < self.offset_hist[1] < 0.8))
         print((-0.8 < self.offset_hist[1] < 0 < self.offset_hist[0] < 0.8))
         if (-0.8 < self.offset_hist[0] < 0 < self.offset_hist[1] < 0.8) \
@@ -36,6 +47,7 @@ class Surrender(FollowTape):
         return False
 
     def run(self, unit):
+        """runs an iteration of surrender"""
         super().run(unit)
         print(self.refl, self.offset_hist)
         if self.in_corner(unit) or self.outside_corner(unit):
