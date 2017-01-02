@@ -11,6 +11,9 @@ class ThreatMode():
         self.distance = 50
 
     def detect_threat(self, unit):
+        """
+        detect moving object that can be classed as a threat
+        """
         if unit.prox() <= self.distance:
             unit.stop()
             sleep(0.2)
@@ -30,6 +33,9 @@ class ThreatMode():
                 return patrol.Patrol(unit, patrol.Patrol.GUARD)
 
     def shoot(self, unit):
+        """
+        Rotate and fire a shot
+        """
         unit.rotate(100,150)
         sleep(0.8)
         unit.speak('Say hello to my little friend')
@@ -40,6 +46,9 @@ class ThreatMode():
         sleep(2)
 
     def run(self, unit):
+        """
+        run iteration of threat
+        """
         prox = unit.ir_sensor.get_prox()
         print(prox)
         if self.detect_threat(unit):
