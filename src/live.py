@@ -38,10 +38,14 @@ class LiveMode():
         master.bind('<space>', self.shoot)
 
     def dir_key_pressed(self, event):
+        """registers key press"""
         key = event.keysym
         self.dir_key_states[key] = True
 
     def dir_key_released(self, event):
+        """
+        registers key release
+        """
         key = event.keysym
         self.dir_key_states[key] = False
 
