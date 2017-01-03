@@ -1,8 +1,7 @@
 import tkinter as tk
 
-from unit import *
-import modes
 from thread import GuardDog
+import modes
 
 
 class App():
@@ -151,7 +150,10 @@ class Live(ModeFrame):
         speak_entry.place(relx=.0005,rely=.385)
         speak_button = tk.Button(self,
              text='Speak', 
-             command=lambda: controller.gd.unit.speak(speak_entry.get()))
+             command=lambda: self.controller.gd.queue_command(
+                 command=lambda: self.controller.gd.unit.speak(speak_entry.get())
+             )
+        )
         speak_button.place(relx=.570, rely=.375)
         
     def show(self):

@@ -6,6 +6,7 @@ class Unit(Ev3):
     """Handle unit."""
 
     def __init__(self, ip):
+        """Connect to Ev3."""
         super().__init__(ip)
 
         # ports
@@ -35,6 +36,7 @@ class Unit(Ev3):
         self.left.run_forever(-self.speed, run=False)
         self.right.run_forever(-self.speed, run=False)
         self.start_motors(self.wheels)
+        return self.speed
 
     def rotate_forever(self, speed):
         """Make the unit rotate."""
@@ -44,6 +46,7 @@ class Unit(Ev3):
         self.start_motors(self.wheels)
 
     def change_direction(self, speed):
+        """Go back and go in a random direction."""
         self.forward(-speed)
         sleep(0.8)
         self.stop()
@@ -71,7 +74,13 @@ class Unit(Ev3):
             self.speed = 90, direction = 0.75:
             left_speed = 100, right_speed = 25
 
-        Derivation:
+            self.speed = 60, direction = 1.5:
+            left_speed = , right_speed = 
+
+            self.speed = 50, direction = 2:
+            left_speed = -50, right_speed = 50 (unit rotates on the spot)
+
+        Derivation when -1 <= direction <= 1:
             speed_ratio/direction decides the ratio of speed
             between the two wheels, therefore deciding the
             turn radius:
@@ -85,8 +94,6 @@ class Unit(Ev3):
                 ( max_speed + min_speed ) / 2 = self.speed
                     --> max_speed = 2 * speed_ratio / self.speed
         """
-
-        print(direction)
 
         if -1 <= direction <= 1:
             speed_ratio = 1 - abs(direction)
