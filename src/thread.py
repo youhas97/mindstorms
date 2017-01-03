@@ -36,6 +36,7 @@ class GuardDog(Thread):
         self.queue = []
 
     def initiate_logger(self):
+        """Set up and configure logger."""
         self.log = logging.getLogger('dog')
         self.log.setLevel(logging.INFO)
         console = logging.StreamHandler()
