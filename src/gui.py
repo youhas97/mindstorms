@@ -1,12 +1,9 @@
 import tkinter as tk
+
 from unit import *
+import modes
 from thread import GuardDog
 
-import follow_tape
-import idle
-import patrol
-import live
-import lazyaf
 
 class App():
     """Root frame of GUI."""
@@ -143,13 +140,11 @@ class Live(ModeFrame):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
         
-        self.add_buttons()
-        
         buttons = [
-             ['Patrol', lambda: controller.gd.set_mode(patrol.Patrol)],
-             ['Follow tape', lambda: controller.gd.set_mode(follow_tape.FollowTape)],
-             ['Follow me', lambda: controller.gd.set_mode(lazyaf.GetOverHere)],
-             ['Idle', lambda: controller.gd.set_mode(idle.IdleMode)]
+             ['Patrol', lambda: controller.gd.set_mode(modes.Patrol)],
+             ['Follow tape', lambda: controller.gd.set_mode(modes.FollowTape)],
+             ['Follow me', lambda: controller.gd.set_mode(modes.FollowRemote)],
+             ['Idle', lambda: controller.gd.set_mode(modes.IdleMode)]
         ]
         buttons = App.create_buttons(self, buttons, width=6)
 
@@ -160,25 +155,14 @@ class Live(ModeFrame):
              command=lambda: controller.gd.unit.speak(speak_entry.get()))
         speak_button.place(relx=.570, rely=.375)
         
-        
-    def add_buttons(self):
-        """Create direction buttons"""
-        dir_btns_commands = [
-            ['Forward', lambda: print('Up')],
-            ['Left', lambda: print('Left')],
-            ['Right', lambda: print('Right')],
-            ['Back', lambda: print('Down')],
-        ]
-        
-
     def show(self):
         """Start live mode and bind keys."""
         gd = self.controller.gd
         if gd.unit:
-            self.controller.gd.set_mode(live.LiveMode)
+            self.controller.gd.set_mode(modes.LiveMode)
             self.controller.gd.queue_command(
                 command=lambda: gd.mode.bind_keys(self.controller.master),
-                condition=lambda: isinstance(gd.mode, live.LiveMode)
+                condition=lambda: isinstance(gd.mode, modes.LiveMode)
             )
 
 
@@ -199,8 +183,8 @@ class Patrol(ModeFrame):
             self,
             text='Peaceful',
             command=lambda: self.controller.gd.queue_command(
-                command=lambda: self.controller.gd.mode.set_patrol_mode(patrol.Patrol.PEACEFUL),
-                condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
+                command=lambda: self.controller.gd.mode.set_patrol_mode(modes.Patrol.PEACEFUL),
+                condition=lambda: isinstance(self.controller.gd.mode, modes.Patrol)
             ),
             variable=self.mode,
             value=1,
@@ -210,8 +194,8 @@ class Patrol(ModeFrame):
             self,
             text='Guard',
             command=lambda: self.controller.gd.queue_command(
-                command=lambda: self.controller.gd.mode.set_patrol_mode(patrol.Patrol.GUARD),
-                condition=lambda: isinstance(self.controller.gd.mode, patrol.Patrol)
+                command=lambda: self.controller.gd.mode.set_patrol_mode(modes.Patrol.GUARD),
+                condition=lambda: isinstance(self.controller.gd.mode, modes.Patrol)
             ),
             variable=self.mode,
             value=2
@@ -223,7 +207,7 @@ class Patrol(ModeFrame):
     def show(self):
         """Start patrol mode."""
         if self.controller.gd.unit:
-            self.controller.gd.set_mode(patrol.Patrol)
+            self.controller.gd.set_mode(modes.Patrol)
 
 
 if (__name__ == '__main__'):

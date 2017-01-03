@@ -4,8 +4,8 @@ from threading import Thread
 import tkinter as tk
 
 from unit import Unit
+import modes
 
-import idle
 
 class GuardDog(Thread):
     """Run and communicate with unit.
@@ -101,7 +101,7 @@ class GuardDog(Thread):
     
     def run(self):
         """Run an iteration."""
-        self.mode = idle.IdleMode(self.unit)
+        self.mode = modes.IdleMode(self.unit)
         self.time_prev = self.time = time()
 
         while True:
