@@ -141,7 +141,6 @@ class Live(ModeFrame):
         super().__init__(parent, controller)
         
         buttons = [
-             ['Patrol', lambda: controller.gd.set_mode(modes.Patrol)],
              ['Follow tape', lambda: controller.gd.set_mode(modes.FollowTape)],
              ['Follow me', lambda: controller.gd.set_mode(modes.FollowRemote)],
              ['Idle', lambda: controller.gd.set_mode(modes.IdleMode)]
