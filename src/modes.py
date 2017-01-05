@@ -403,6 +403,7 @@ class LiveMode():
         return direction, speed
 
     def run(self, unit):
+        """run an iteration of Live Mode"""
         direction, speed = self.calculate_movement()
 
         self.unit.set_speed(self.speed*speed)
