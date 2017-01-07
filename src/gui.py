@@ -76,13 +76,20 @@ class Data(tk.Frame):
     """Side pane for data."""
 
     def __init__(self, parent, controller):
+        """Create data fields."""
         tk.Frame.__init__(self, parent)
 
         self.create_data_field('Speed', controller.gd.actual_speed_str, (0,0.05))
         self.create_data_field('Distance', controller.gd.distance_str, (0,0.35))
 
     def create_data_field(self, title, variable, pos):
-        """Create a label with a title and data output."""
+        """Create a label with a title and data output.
+        
+        Parameters:
+            title -- title of field shown above data
+            variable -- Tk variable object with data
+            pos -- tuple of relative x,y position
+        """
         title_lbl = tk.Label(self, text=title)
         data_lbl = tk.Label(
             self,
@@ -142,6 +149,7 @@ class Live(ModeFrame):
     """Live mode frame."""
 
     def __init__(self, parent, controller):
+        """Add widgets."""
         super().__init__(parent, controller)
         
         buttons = [
@@ -189,8 +197,10 @@ class Patrol(ModeFrame):
             self,
             text='Peaceful',
             command=lambda: self.controller.gd.queue_command(
-                command=lambda: self.controller.gd.mode.set_patrol_mode(modes.Patrol.PEACEFUL),
-                condition=lambda: isinstance(self.controller.gd.mode, modes.Patrol)
+                command=lambda: self.controller.gd.mode.set_patrol_mode(
+                    modes.Patrol.PEACEFUL),
+                condition=lambda: isinstance(self.controller.gd.mode,
+                                             modes.Patrol)
             ),
             variable=self.mode,
             value=1,
@@ -200,8 +210,10 @@ class Patrol(ModeFrame):
             self,
             text='Guard',
             command=lambda: self.controller.gd.queue_command(
-                command=lambda: self.controller.gd.mode.set_patrol_mode(modes.Patrol.GUARD),
-                condition=lambda: isinstance(self.controller.gd.mode, modes.Patrol)
+                command=lambda: self.controller.gd.mode.set_patrol_mode(
+                    modes.Patrol.GUARD),
+                condition=lambda: isinstance(self.controller.gd.mode,
+                                             modes.Patrol)
             ),
             variable=self.mode,
             value=2
