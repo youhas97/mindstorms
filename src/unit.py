@@ -6,7 +6,7 @@ class Unit(Ev3):
     """Handle unit."""
 
     def __init__(self, ip):
-        """Connect to Ev3."""
+        """Connect to Ev3, initiate instance variables"""
         super().__init__(ip)
 
         # ports

@@ -4,7 +4,11 @@ from os import system
 
 
 class IdleMode():
-    """Let unit run idle."""
+    """Let unit run idle
+
+    Public methods:
+        run -- Run an iteration of the mode.
+    """
 
     def __init__(self, unit):
         unit.stop()
@@ -15,7 +19,11 @@ class IdleMode():
 
 
 class Patrol():
-    """Patrol the room either peacefully or guard it."""
+    """Patrol the room either peacefully or guard it.
+
+    Public methods:
+        run -- Run an iteration of the mode.
+    """
     PEACEFUL = 0
     GUARD = 1
 
@@ -86,7 +94,7 @@ class FollowTape():
     """Follow tape on the floor.
 
     Public methods:
-        run -- Run an iteration of the follow tape mode.
+        run -- Run an iteration of the mode.
     """
 
     def __init__(self, unit):
@@ -181,7 +189,11 @@ class FollowTape():
 
 
 class ThreatMode():
-    """Make unit react to a threat."""
+    """Make unit react to a threat.
+
+    Public methods:
+        run -- Run an iteration of the mode.
+    """
 
     def __init__(self, unit, speed=40):
         self.speed = speed
@@ -237,7 +249,11 @@ class ThreatMode():
 
 
 class Surrender(FollowTape):
-    """Surrender to a threat and find the closest corner."""
+    """Surrender to a threat and find the closest corner.
+
+    Public methods:
+        run -- Run an iteration of the mode.
+    """
     def __init__(self, unit):
         super().__init__(unit)
 
@@ -284,7 +300,11 @@ class Surrender(FollowTape):
 
 
 class FollowRemote(FollowTape):
-    """Make unit go to the remote."""
+    """Make unit go to the remote.
+
+    Public methods:
+        run -- Run an iteration of the mode.
+    """
 
     def __init__(self, unit):
         super().__init__(unit)
@@ -321,7 +341,11 @@ class FollowRemote(FollowTape):
 
 
 class LiveMode():
-    """Control unit with keyboard."""
+    """Control unit with keyboard.
+
+    Public methods:
+        run -- Run an iteration of the mode.
+    """
     
     def __init__(self, unit):
         self.unit = unit

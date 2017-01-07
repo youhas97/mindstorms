@@ -27,7 +27,7 @@ class App():
         data.grid_rowconfigure(0, weight=1)
 
     def create_mode_frames(self):
-        """Create objects for mode frames."""
+        """Create objects for mode frames and store them in a dict."""
         self.frames = {}
         for Frame in (Start, Live, Patrol):
             page_name = Frame.__name__
@@ -36,7 +36,12 @@ class App():
             frame.grid(row=0, column=0, sticky='nsew')
 
     def show_frame(self, page_name):
-        """Raise a frame to the top."""
+        """Raise a frame to the top.
+        
+        Parameters:
+            page_name -- The name of the frame class that should 
+                         be shown
+        """
         frame = self.frames[page_name]
         frame.tkraise()
         frame.show()
