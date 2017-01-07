@@ -5,7 +5,16 @@ import modes
 
 
 class App():
-    """Root frame of GUI."""
+    """Root frame of GUI.
+    
+    Layout:
+         __________________
+        |         |        |
+        | stack   |        |
+        |container|sidepane|
+        |         |        |
+        |_________|________|
+    """
 
     def __init__(self, master):
         self.gd = GuardDog()

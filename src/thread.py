@@ -101,7 +101,7 @@ class GuardDog(Thread):
             self.NewMode = None
     
     def run(self):
-        """Run an iteration."""
+        """Run the main loop of the unit thread."""
         self.mode = modes.IdleMode(self.unit)
         self.time_prev = self.time = time()
 
