@@ -17,6 +17,7 @@ class App():
     """
 
     def __init__(self, master):
+        """Inititiage GuardDog and add subframes."""
         self.gd = GuardDog()
         self.master = master
         
@@ -137,7 +138,7 @@ class Start(ModeFrame):
     """Starting frame for GUI."""
 
     def __init__(self, parent, controller):
-        """Add widgets."""
+        """Init ModeFrame and add widgets."""
         super().__init__(parent, controller)
 
         ip_entry = tk.Entry(self)
@@ -158,7 +159,7 @@ class Live(ModeFrame):
     """Live mode frame."""
 
     def __init__(self, parent, controller):
-        """Add widgets."""
+        """Init ModeFrame and add widgets."""
         super().__init__(parent, controller)
         
         buttons = [
@@ -193,13 +194,13 @@ class Patrol(ModeFrame):
     """Patrol mode frame."""
 
     def __init__(self, parent, controller):
-        """Add widgets."""
+        """Init ModeFrame and add radio buttons."""
         super().__init__(parent, controller)
         
         self.add_radio_buttons()
 
     def add_radio_buttons(self):
-        """Adds two radio buttons for peaceful and guard mode"""
+        """Add two radio buttons for peaceful and guard mode."""
         self.mode = tk.IntVar()
 
         radio_peace = tk.Radiobutton(
