@@ -98,8 +98,7 @@ class Unit(Ev3):
         if -1 <= direction <= 1:
             speed_ratio = 1 - abs(direction)
             max_speed = 2 / (speed_ratio + 1) * self.speed
-            if max_speed > 100: max_speed = 100
-            elif max_speed < -100: max_speed = -100
+            max_speed = max(min(100, max_speed), -100)
             min_speed = max_speed * speed_ratio
         elif -2 <= direction <= 2:
             max_speed = self.speed
@@ -107,8 +106,8 @@ class Unit(Ev3):
         else:
             raise ValueError('input outside range [-2,2] -- {}'.format(direction))
 
-        if direction > 0: left_speed, right_speed = max_speed, min_speed
-        else:             left_speed, right_speed = min_speed, max_speed
+        left_speed, right_speed = max_speed, min_speed if direction > 0 else
+                                  min_speed, max_speed
 
         self.left.run_forever(-round(left_speed))
         self.right.run_forever(-round(right_speed))
@@ -152,6 +151,12 @@ class Unit(Ev3):
         return self.color_sensor.get_reflect()
 
     def actual_speed(self):
+        """Parse moving speed (m/s) from unit.
+        
+        Description:
+            The unit speed is calculated by taking the 
+            average speed of the two wheels.
+        """
         WHEEL_DIAMETER = 0.035 * 3.14
         ANGLE_CIRCLE = 360
         left = self.left.get_attribute('speed')
@@ -178,9 +183,3 @@ class Unit(Ev3):
             distance_min = min(distance, distance_min)
             distance_max = max(distance, distance_max)
             if distance_max-distance_min > distance_margin: return True
-
-if __name__ == '__main__':
-    unit = Unit('192.168.43.7')
-    unit.forward(10)
-    while True:
-        print(unit.actual_speed())
