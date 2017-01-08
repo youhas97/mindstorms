@@ -11,9 +11,20 @@ class IdleMode():
     """
 
     def __init__(self, unit):
+        """Stop the unit.
+        
+        Parameters:
+            unit -- a Unit object
+        """
         unit.stop()
 
     def run(self, unit):
+        """Idle the unit.
+        
+        Parameters:
+            unit -- a Unit object
+        """
+
         sleep(1)
         return self
 
@@ -30,6 +41,7 @@ class Patrol():
     DISTANCE_THRESHOLD = 40
 
     def __init__(self, unit, mode=0):
+        """Set instance variables."""
         self.speed = 40
         self.mode_changed = False
         self.patrol_mode = mode
@@ -45,7 +57,7 @@ class Patrol():
             self.mode_changed = True
 
     def update_mode(self, unit):
-        """updates mode"""
+        """Update mode."""
         if self.mode_changed:
             self.toggle_mode(unit)
             self.mode_changed = False
@@ -68,7 +80,7 @@ class Patrol():
         sleep(2.5)
 
     def object_in_prox(self):
-        """checks if object is in sight range"""
+        """Check if object is in sight range."""
         return self.prox < Patrol.DISTANCE_THRESHOLD
 
     def run(self, unit):
@@ -98,6 +110,7 @@ class FollowTape():
     """
 
     def __init__(self, unit):
+        """Set instance variables and speed of unit."""
         self.hist_len = 5
 
         self.offset = 0
@@ -196,6 +209,7 @@ class ThreatMode():
     """
 
     def __init__(self, unit, speed=40):
+        """Set instance variables."""
         self.speed = speed
         self.distance = 50
 
@@ -254,10 +268,9 @@ class Surrender(FollowTape):
     Public methods:
         run -- Run an iteration of the mode.
     """
-    def __init__(self, unit):
-        super().__init__(unit)
 
     def __init__(self, unit):
+        """Initiate FollowTape and indicate surrender."""
         super().__init__(unit)
         unit.speak('I surrender')
         sleep(2)
@@ -307,6 +320,7 @@ class FollowRemote(FollowTape):
     """
 
     def __init__(self, unit):
+        """Initiate FollowTape, stop unit and set instance variables."""
         super().__init__(unit)
         unit.stop()
 
@@ -318,6 +332,7 @@ class FollowRemote(FollowTape):
         self.angle, self.distance = unit.seek(2)
 
     def calculate_offset(self, unit):
+        """Calculate offset angle from remote."""
         self.offset_prev = self.offset
         pivot = 0
         self.offset = self.angle / 25.0
@@ -329,7 +344,7 @@ class FollowRemote(FollowTape):
             unit.set_speed(0)
 
     def run(self, unit):
-        """start following remote"""
+        """try follow remote"""
         self.update_seek(unit)
         self.calculate_offset(unit)
         self.adjust_speed(unit)
@@ -348,6 +363,7 @@ class LiveMode():
     """
     
     def __init__(self, unit):
+        """Stop unit and set instance variables."""
         self.unit = unit
 
         self.initiate_keys()
@@ -398,7 +414,7 @@ class LiveMode():
         self.shoot_flag = True
         
     def calculate_movement(self):
-        """Calculate x,y direction from keys.
+        """Calculate x, y direction from current pressed keys.
         
         Description:
             With regard to current keys pressed a turn radius
