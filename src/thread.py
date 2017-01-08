@@ -17,12 +17,14 @@ class GuardDog(Thread):
     """
 
     def __init__(self):
+        """Initiate thread and logger and set instance variables."""
         Thread.__init__(self)
         
         self.initiate_logger()
         self.set_start_values()
 
     def set_start_values(self):
+        """Set instance variables."""
         self.unit = None
         self.mode = None
         self.NewMode = None
