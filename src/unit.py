@@ -106,8 +106,10 @@ class Unit(Ev3):
         else:
             raise ValueError('input outside range [-2,2] -- {}'.format(direction))
 
-        left_speed, right_speed = max_speed, min_speed if direction > 0 else
-                                  min_speed, max_speed
+        if direction > 0:
+            left_speed, right_speed = max_speed, min_speed
+        else:
+            left_speed, right_speed = min_speed, max_speed
 
         self.left.run_forever(-round(left_speed))
         self.right.run_forever(-round(right_speed))
