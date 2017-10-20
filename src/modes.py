@@ -193,7 +193,6 @@ class FollowTape():
         if self.refl_interval > 10:
             self.calculate_offset()
             self.adjust_speed(unit)
-            self.adjust_direction()
             self.adjust_turn(unit)
 
         unit.turn(self.turn)
